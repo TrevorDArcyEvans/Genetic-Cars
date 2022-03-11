@@ -1,6 +1,6 @@
-﻿using Excubo.Blazor.Canvas.Contexts;
+﻿namespace GeneticCars.Models;
 
-namespace GeneticCars.Models;
+using Excubo.Blazor.Canvas.Contexts;
 
 public interface IDrawable
 {
