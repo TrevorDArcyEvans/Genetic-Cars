@@ -1,4 +1,4 @@
-﻿namespace GeneticCars.Models;
+﻿namespace GeneticCars;
 
 /// <summary>
 /// Convert to Radians.
