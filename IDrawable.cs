@@ -1,4 +1,4 @@
-﻿namespace GeneticCars.Models;
+﻿namespace GeneticCars;
 
 using Excubo.Blazor.Canvas.Contexts;
 
