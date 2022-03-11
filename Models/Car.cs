@@ -10,7 +10,12 @@ public sealed class Car
   public const int LidarSenseDist = 100;
 
   public Point Position => _position;
-  private Point _position = new(20, 20);
+  private Point _position;
+
+  public Car(Point initialPos)
+  {
+    _position = new Point(initialPos.X, initialPos.Y);
+  }
 
   public double Heading { get; private set;} // degrees
 

@@ -19,11 +19,11 @@ public partial class Index
 
   public Index()
   {
-    var car1 = new Car();
+    var car1 = new Car(new(20, 20));
     var carDraw1 = new CarDrawer(car1);
     _cars.Add(carDraw1);
 
-    var chkpt1 = new Checkpoint();
+    var chkpt1 = new Checkpoint(new (200, 200));
     var chkptDraw1 = new CheckpointDrawer(chkpt1);
     _checkpoints.Add(chkptDraw1);
 
