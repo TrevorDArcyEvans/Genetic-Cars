@@ -1,0 +1,15 @@
+﻿@page "/"
+
+@using Excubo.Blazor.Canvas
+
+<PageTitle>Genetic Cars</PageTitle>
+
+<Canvas
+  class="canvas"
+  @ref="_canvas"
+  width="800px"
+  height="800px"
+  style="border-style: solid;border-color: aquamarine;">
+</Canvas>
+<p/>
+<button @onclick="OnStartClick">Start</button>
