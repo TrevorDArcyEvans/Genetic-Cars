@@ -19,7 +19,8 @@ public partial class Index
   public Index()
   {
     var car1 = new Car();
-    _drawables.Add(car1);
+    var carDraw1 = new CarDrawer(car1);
+    _drawables.Add(carDraw1);
     
     _timer.Elapsed += TimerOnElapsed;
   }
@@ -27,9 +28,9 @@ public partial class Index
   private void TimerOnElapsed(object? sender, ElapsedEventArgs e)
   {
     _count++;
-    var car = _drawables.OfType<Car>().SingleOrDefault();
-    car?.Move(10, 10);
-    car?.Rotate(15);
+    var carDraw = _drawables.OfType<CarDrawer>().SingleOrDefault();
+    carDraw?.Car.Move(10, 10);
+    carDraw?.Car.Rotate(15);
     InvokeAsync(StateHasChanged);
   }
 
