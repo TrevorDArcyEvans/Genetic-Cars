@@ -12,7 +12,8 @@ public partial class Index
   
   private Canvas _canvas;
   private int _count;
-  private readonly Timer _timer = new(1000);
+  private readonly Timer _timer = new(1000){ Enabled = true };
+  private bool _run;
 
   private readonly List<IDrawable> _checkpoints = new();
   private readonly List<IDrawable> _cars = new();
@@ -32,6 +33,11 @@ public partial class Index
 
   private void TimerOnElapsed(object? sender, ElapsedEventArgs e)
   {
+    if (!_run)
+    {
+      return;
+    }
+  
     _count++;
     var carDraw = _cars.OfType<CarDrawer>().SingleOrDefault();
     carDraw?.Car.Move(10, 10);
@@ -44,7 +50,7 @@ public partial class Index
     await using var ctx = await _canvas.GetContext2DAsync();
     await ctx.ClearRectAsync(0, 0, CanvasWidth, CanvasHeight);
     await ctx.FontAsync("48px solid");
-    await ctx.FillTextAsync(_count.ToString(), 400, 150);
+    await ctx.FillTextAsync(_count.ToString(), 650, 650);
 
     var cars = _cars.Select(d => d.Draw(ctx));
     await Task.WhenAll(cars);
@@ -54,6 +60,6 @@ public partial class Index
 
   private void OnStartClick()
   {
-    _timer.Enabled = !_timer.Enabled;
+    _run = !_run;
   }
 }
