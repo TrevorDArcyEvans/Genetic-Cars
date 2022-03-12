@@ -1,7 +1,6 @@
 ﻿namespace GeneticCars.Models;
 
 using System.Drawing;
-using Excubo.Blazor.Canvas.Contexts;
 
 public sealed class Car
 {

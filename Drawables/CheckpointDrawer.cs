@@ -1,6 +1,6 @@
 namespace GeneticCars.Models;
 
-using Excubo.Blazor.Canvas.Contexts;
+using Blazor.Extensions.Canvas.Canvas2D;
 
 public sealed class CheckpointDrawer : IDrawable
 {
@@ -11,13 +11,13 @@ public sealed class CheckpointDrawer : IDrawable
     Checkpoint = checkpt;
   }
 
-  public async Task Draw(Context2D ctx)
+  public async Task Draw(Canvas2DContext ctx)
   {
     await ctx.SaveAsync();
     try
     {
       // body
-      await ctx.FillStyleAsync("red");
+      await ctx.SetFillStyleAsync("red");
       await ctx.FillRectAsync(Checkpoint.Position.X, Checkpoint.Position.Y, Checkpoint.Width, Checkpoint.Height);
     }
     finally

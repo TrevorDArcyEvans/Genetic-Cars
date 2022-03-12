@@ -23,6 +23,24 @@
   </div>
 
   <script src="_framework/blazor.webassembly.js"></script>
+  <script src="_content/Blazor.Extensions.Canvas/blazor.extensions.canvas.js"></script>
+
+  <script>
+
+    function renderJS(timeStamp)
+    {
+      theInstance.invokeMethodAsync('RenderInBlazor', timeStamp);
+      window.requestAnimationFrame(renderJS);
+    }
+
+    // called from C# (Index.razor)
+    window.initRenderJS = (instance) =>
+    {
+      window.theInstance = instance;
+      window.requestAnimationFrame(renderJS);
+    };
+
+</script>
 
 </body>
 

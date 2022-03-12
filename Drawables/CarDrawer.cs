@@ -1,7 +1,7 @@
 namespace GeneticCars.Models;
 
 using System.Drawing;
-using Excubo.Blazor.Canvas.Contexts;
+using Blazor.Extensions.Canvas.Canvas2D;
 
 public sealed class CarDrawer : IDrawable
 {
@@ -12,29 +12,29 @@ public sealed class CarDrawer : IDrawable
     Car = car;
   }
 
-  public async Task Draw(Context2D ctx)
+  public async Task Draw(Canvas2DContext ctx)
   {
     await ctx.SaveAsync();
     try
     {
       await ctx.TranslateAsync(Car.Position.X, Car.Position.Y);
-      await ctx.RotateAsync(Car.Heading.ToRadians());
+      await ctx.RotateAsync((float)Car.Heading.ToRadians());
       await ctx.TranslateAsync(-Car.Position.X, -Car.Position.Y);
 
       // body
-      await ctx.FillStyleAsync("blue");
+      await ctx.SetFillStyleAsync("blue");
       await ctx.FillRectAsync(Car.Position.X, Car.Position.Y, Car.Width, Car.Height);
 
       // nose
       const int NoseWidth = 10;
       const int NoseHeight = 10;
-      await ctx.FillStyleAsync("green");
+      await ctx.SetFillStyleAsync("green");
       await ctx.FillRectAsync(Car.Position.X + Car.Width / 2 - NoseWidth / 2, Car.Position.Y - 3, NoseWidth, NoseHeight);
 
       // lidar
       const int LidarSenseWidth = 3;
-      await ctx.StrokeStyleAsync("yellow");
-      await ctx.LineWidthAsync(LidarSenseWidth);
+      await ctx.SetStrokeStyleAsync("yellow");
+      await ctx.SetLineWidthAsync(LidarSenseWidth);
       await ctx.BeginPathAsync();
 
       var nose = new Point(Car.Position.X + Car.Width / 2, Car.Position.Y);

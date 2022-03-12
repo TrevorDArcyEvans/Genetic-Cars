@@ -1,8 +1,8 @@
 ﻿namespace GeneticCars;
 
-using Excubo.Blazor.Canvas.Contexts;
+using Blazor.Extensions.Canvas.Canvas2D;
 
 public interface IDrawable
 {
-  Task Draw(Context2D ctx);
+  Task Draw(Canvas2DContext ctx);
 }
