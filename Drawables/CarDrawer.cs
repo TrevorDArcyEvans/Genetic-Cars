@@ -28,7 +28,7 @@ public sealed class CarDrawer : IDrawable
       // nose
       const int NoseWidth = 10;
       const int NoseHeight = 10;
-      await ctx.SetFillStyleAsync("green");
+      await ctx.SetFillStyleAsync("orange");
       await ctx.FillRectAsync(Car.Position.X + Car.Width / 2 - NoseWidth / 2, Car.Position.Y - 3, NoseWidth, NoseHeight);
 
       // lidar
