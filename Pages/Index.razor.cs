@@ -5,6 +5,8 @@ using Blazor.Extensions.Canvas.Canvas2D;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using Models;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 
 public partial class Index
 {
@@ -13,6 +15,11 @@ public partial class Index
   
   [Inject]
   private IJSRuntime JsRuntime { get; set; }
+
+  [Inject]
+  private HttpClient _client { get; set; }
+
+  private string TrackList { get; set; }
 
   private Canvas2DContext ctx;
   private BECanvasComponent _canvas;
@@ -31,6 +38,18 @@ public partial class Index
     var chkpt1 = new Checkpoint(new (200, 200));
     var chkptDraw1 = new CheckpointDrawer(chkpt1);
     _checkpoints.Add(chkptDraw1);
+  }
+
+  protected override async Task OnInitializedAsync()
+  {
+    var trackListResp = await _client.GetAsync("tracks/tracks.json");
+    var trackListJson = await trackListResp.Content.ReadAsStringAsync();
+    TrackList = trackListJson;
+    var trackStrm = await _client.GetByteArrayAsync("tracks/track001.png");
+    var InputImageBitmap = Image.Load<Rgba32>(trackStrm);
+    TrackList += Environment.NewLine + "Loaded:  tracks/track001.png";
+
+    await base.OnInitializedAsync();
   }
 
   protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -59,8 +78,8 @@ public partial class Index
     await ctx.FillTextAsync(_count.ToString(), 650, 650);
 
     var carDraw = _cars.OfType<CarDrawer>().SingleOrDefault();
-    carDraw?.Car.Move(10, 10);
-    carDraw?.Car.Rotate(15);
+    carDraw?.Car.Move(1, 1);
+    carDraw?.Car.Rotate(1.5);
     _count++;
 
     var cars = _cars.Select(d => d.Draw(ctx));
