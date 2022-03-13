@@ -43,6 +43,11 @@ public partial class Index
   [JSInvokable]
   public async ValueTask RenderInBlazor(float timeStamp)
   {
+    if (!_run)
+    {
+      return;
+    }
+
     await this.ctx.BeginBatchAsync();
 
     await this.ctx.ClearRectAsync(0, 0, CanvasWidth, CanvasHeight);
@@ -50,11 +55,13 @@ public partial class Index
     await this.ctx.FillRectAsync(0, 0, CanvasWidth, CanvasHeight);
 
     await ctx.SetFontAsync("48px solid");
+    await this.ctx.SetFillStyleAsync("black");
     await ctx.FillTextAsync(_count.ToString(), 650, 650);
 
     var carDraw = _cars.OfType<CarDrawer>().SingleOrDefault();
     carDraw?.Car.Move(10, 10);
     carDraw?.Car.Rotate(15);
+    _count++;
 
     var cars = _cars.Select(d => d.Draw(ctx));
     await Task.WhenAll(cars);
