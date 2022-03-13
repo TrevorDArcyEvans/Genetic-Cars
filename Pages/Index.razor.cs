@@ -5,6 +5,7 @@ using Blazor.Extensions.Canvas.Canvas2D;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using Models;
+using Newtonsoft.Json;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
@@ -19,7 +20,8 @@ public partial class Index
   [Inject]
   private HttpClient _client { get; set; }
 
-  private string TrackList { get; set; }
+  private List<string> _trackList { get; set; } = new ();
+  private string _selTrack { get; set; }
 
   private Canvas2DContext ctx;
   private BECanvasComponent _canvas;
@@ -28,6 +30,7 @@ public partial class Index
 
   private int _count;
   private bool _run;
+  private string _debug { get; set; }
 
   private readonly List<IDrawable> _checkpoints = new();
   private readonly List<IDrawable> _cars = new();
@@ -48,18 +51,19 @@ public partial class Index
   {
     var trackListResp = await _client.GetAsync("tracks/tracks.json");
     var trackListJson = await trackListResp.Content.ReadAsStringAsync();
-    TrackList = trackListJson + Environment.NewLine;
-    var trackStrm = await _client.GetByteArrayAsync("tracks/track001.png");
+    _trackList = JsonConvert.DeserializeObject<List<string>>(trackListJson);
+    _selTrack = _trackList.First();
+
+    var trackStrm = await _client.GetByteArrayAsync($"tracks/{_selTrack}");
     var trackImg = Image.Load<Rgba32>(trackStrm);
     var track = new Track(trackImg);
     _track = new TrackDrawer(track, _trackImgRef);
-    TrackList += "Loaded:  tracks/track001.png" + Environment.NewLine;
-    TrackList += $"Start:  [{track.Start.X}, {track.Start.Y}]" + Environment.NewLine;
+    _debug += $"Loaded:  {_selTrack}" + Environment.NewLine;
+    _debug += $"Start:  [{track.Start.X}, {track.Start.Y}]" + Environment.NewLine;
 
     using var outStream = new MemoryStream();
     trackImg.SaveAsPng(outStream);
     _image64 = "data:image/png;base64," + Convert.ToBase64String(outStream.ToArray());
-
 
     await base.OnInitializedAsync();
   }
@@ -68,7 +72,7 @@ public partial class Index
   {
     ctx = await _canvas.CreateCanvas2DAsync();
     await JsRuntime.InvokeAsync<object>("initRenderJS", DotNetObjectReference.Create(this));
-    await base.OnInitializedAsync();
+    await base.OnAfterRenderAsync(firstRender);
   }
 
   [JSInvokable]

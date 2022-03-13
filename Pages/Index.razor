@@ -12,5 +12,12 @@
 
 <button @onclick="OnStartClick">Start</button>
 <button @onclick="OnResetClickAsync">Reset</button>
-<textarea @bind="TrackList"></textarea>
+<select @bind="@_selTrack" class="form-control">
+  @foreach (var track in _trackList)
+  {
+    <option value="@track">@track</option>
+  }
+</select>
+<textarea @bind="_debug"></textarea>
 </div>
+
