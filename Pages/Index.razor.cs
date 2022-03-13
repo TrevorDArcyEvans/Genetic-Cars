@@ -57,7 +57,7 @@ public partial class Index
 
   protected override async Task OnAfterRenderAsync(bool firstRender)
   {
-    this.ctx = await _canvas.CreateCanvas2DAsync();
+    ctx = await _canvas.CreateCanvas2DAsync();
     await JsRuntime.InvokeAsync<object>("initRenderJS", DotNetObjectReference.Create(this));
     await base.OnInitializedAsync();
   }
@@ -97,5 +97,16 @@ public partial class Index
   private void OnStartClick()
   {
     _run = !_run;
+  }
+
+  private void OnResetClickAsync()
+  {
+    _run = false;
+    _count = 0;
+    var carDraw = _cars.OfType<CarDrawer>().SingleOrDefault();
+    var pos = carDraw?.Car.Position;
+    carDraw?.Car.Move(-pos?.X ?? 0, -pos?.Y ?? 0);
+    var heading = carDraw?.Car.Heading;
+    carDraw?.Car.Rotate(heading ?? 0);
   }
 }
