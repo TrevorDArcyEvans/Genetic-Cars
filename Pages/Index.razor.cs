@@ -52,18 +52,11 @@ public partial class Index
     var trackListResp = await _client.GetAsync("tracks/tracks.json");
     var trackListJson = await trackListResp.Content.ReadAsStringAsync();
     _trackList = JsonConvert.DeserializeObject<List<string>>(trackListJson);
-    _selTrack = _trackList.First();
-
-    var trackStrm = await _client.GetByteArrayAsync($"tracks/{_selTrack}");
-    var trackImg = Image.Load<Rgba32>(trackStrm);
-    var track = new Track(trackImg);
-    _track = new TrackDrawer(track, _trackImgRef);
-    _debug += $"Loaded:  {_selTrack}" + Environment.NewLine;
-    _debug += $"Start:  [{track.Start.X}, {track.Start.Y}]" + Environment.NewLine;
-
-    using var outStream = new MemoryStream();
-    trackImg.SaveAsPng(outStream);
-    _image64 = "data:image/png;base64," + Convert.ToBase64String(outStream.ToArray());
+    var trackChangeEvt = new ChangeEventArgs
+    { 
+      Value = _trackList.First()
+    };
+    await OnTrackChangedAsync(trackChangeEvt);
 
     await base.OnInitializedAsync();
   }
@@ -93,7 +86,7 @@ public partial class Index
 
     await ctx.SetFontAsync("48px solid");
     await ctx.SetFillStyleAsync("white");
-    await ctx.FillTextAsync(_count.ToString(), 650, 650);
+    await ctx.FillTextAsync(_count.ToString(), 700, 750);
 
     var car = _cars.OfType<CarDrawer>().SingleOrDefault()?.Car;
     car?.Move(1, 1);
@@ -102,7 +95,7 @@ public partial class Index
     if (car?.Position.X > CanvasWidth ||
       car?.Position.Y > CanvasHeight)
     {
-      _run = false;
+      OnResetClick();
     }
 
     var cars = _cars.Select(d => d.Draw(ctx));
@@ -118,7 +111,7 @@ public partial class Index
     _run = !_run;
   }
 
-  private void OnResetClickAsync()
+  private void OnResetClick()
   {
     _run = false;
     _count = 0;
@@ -127,5 +120,22 @@ public partial class Index
     car?.Move(-pos?.X ?? 0, -pos?.Y ?? 0);
     var heading = car?.Heading;
     car?.Rotate(heading ?? 0);
+  }
+
+  private async Task OnTrackChangedAsync(ChangeEventArgs e)
+  {
+    _selTrack = (string)e.Value;
+    var trackStrm = await _client.GetByteArrayAsync($"tracks/{_selTrack}");
+    var trackImg = Image.Load<Rgba32>(trackStrm);
+    var track = new Track(trackImg);
+    _track = new TrackDrawer(track, _trackImgRef);
+    _debug += $"Track changed:  {_selTrack}" + Environment.NewLine;
+    _debug += $"Start:  [{track.Start.X}, {track.Start.Y}]" + Environment.NewLine;
+
+    using var outStream = new MemoryStream();
+    trackImg.SaveAsPng(outStream);
+    _image64 = "data:image/png;base64," + Convert.ToBase64String(outStream.ToArray());
+
+    OnResetClick();
   }
 }

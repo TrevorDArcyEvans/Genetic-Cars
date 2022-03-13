@@ -11,8 +11,8 @@
   <BECanvas Width="800" Height="800" @ref="_canvas"></BECanvas>
 
 <button @onclick="OnStartClick">Start</button>
-<button @onclick="OnResetClickAsync">Reset</button>
-<select @bind="@_selTrack" class="form-control">
+<button @onclick="OnResetClick">Reset</button>
+<select @onchange="@(async (e) => await OnTrackChangedAsync(e))" class="form-control">
   @foreach (var track in _trackList)
   {
     <option value="@track">@track</option>
