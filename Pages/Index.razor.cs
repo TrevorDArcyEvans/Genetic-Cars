@@ -48,12 +48,13 @@ public partial class Index
   {
     var trackListResp = await _client.GetAsync("tracks/tracks.json");
     var trackListJson = await trackListResp.Content.ReadAsStringAsync();
-    TrackList = trackListJson;
+    TrackList = trackListJson + Environment.NewLine;
     var trackStrm = await _client.GetByteArrayAsync("tracks/track001.png");
     var trackImg = Image.Load<Rgba32>(trackStrm);
     var track = new Track(trackImg);
     _track = new TrackDrawer(track, _trackImgRef);
-    TrackList += Environment.NewLine + "Loaded:  tracks/track001.png";
+    TrackList += "Loaded:  tracks/track001.png" + Environment.NewLine;
+    TrackList += $"Start:  [{track.Start.X}, {track.Start.Y}]" + Environment.NewLine;
 
     using var outStream = new MemoryStream();
     trackImg.SaveAsPng(outStream);

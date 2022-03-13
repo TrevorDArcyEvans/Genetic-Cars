@@ -5,6 +5,10 @@ using SixLabors.ImageSharp.PixelFormats;
 
 public sealed class Track
 {
+  // Start point is a 5x5 square of green pixels
+  // This point is centre of the 5x5 square
+  public Point Start { get; }
+
   // width x height
   // [x, y] track points
   // true --> track
@@ -13,7 +17,8 @@ public sealed class Track
 
   public Track(Image<Rgba32> img)
   {
-    _data = new bool[img.Width, img.Height];
+    _data = ConvertImageToBlackAndWhite(img);
+    Start = GetStart(img);
   }
 
   public int Width => _data.GetLength(0);
@@ -77,5 +82,31 @@ public sealed class Track
     }
 
     return BlackWhiteImage;
+  }
+
+  private Point GetStart(Image<Rgba32> inputImg)
+  {
+    var startPts = new List<Point>();
+    inputImg.ProcessPixelRows(acc =>
+    {
+      for (var y = 0; y < acc.Height; y++)
+      {
+        var pxRow = acc.GetRowSpan(y);
+        for (var x = 0; x < pxRow.Length - 1; x++)
+        {
+          ref var px = ref pxRow[x];
+          if (px.G > 245 && 
+            px.R < 10 && 
+            px.B < 10)
+          {
+            startPts.Add(new(x, y));
+          }
+        }
+      }
+    });
+
+    var avgX = startPts.Sum(pt => pt.X) / startPts.Count;
+    var avgY = startPts.Sum(pt => pt.Y) / startPts.Count;
+    return new (avgX, avgY);
   }
 }
