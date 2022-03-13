@@ -28,6 +28,7 @@ public partial class Index
 
   private readonly List<IDrawable> _checkpoints = new();
   private readonly List<IDrawable> _cars = new();
+  private IDrawable _track;
 
   public Index()
   {
@@ -46,7 +47,9 @@ public partial class Index
     var trackListJson = await trackListResp.Content.ReadAsStringAsync();
     TrackList = trackListJson;
     var trackStrm = await _client.GetByteArrayAsync("tracks/track001.png");
-    var InputImageBitmap = Image.Load<Rgba32>(trackStrm);
+    var trackImg = Image.Load<Rgba32>(trackStrm);
+    var track = new Track(trackImg);
+    _track = new TrackDrawer(track);
     TrackList += Environment.NewLine + "Loaded:  tracks/track001.png";
 
     await base.OnInitializedAsync();
@@ -67,14 +70,14 @@ public partial class Index
       return;
     }
 
-    await this.ctx.BeginBatchAsync();
+    await ctx.BeginBatchAsync();
 
-    await this.ctx.ClearRectAsync(0, 0, CanvasWidth, CanvasHeight);
-    await this.ctx.SetFillStyleAsync("white");
-    await this.ctx.FillRectAsync(0, 0, CanvasWidth, CanvasHeight);
+    await ctx.ClearRectAsync(0, 0, CanvasWidth, CanvasHeight);
+    await ctx.SetFillStyleAsync("white");
+    await ctx.FillRectAsync(0, 0, CanvasWidth, CanvasHeight);
 
     await ctx.SetFontAsync("48px solid");
-    await this.ctx.SetFillStyleAsync("black");
+    await ctx.SetFillStyleAsync("black");
     await ctx.FillTextAsync(_count.ToString(), 650, 650);
 
     var carDraw = _cars.OfType<CarDrawer>().SingleOrDefault();
@@ -86,8 +89,9 @@ public partial class Index
     await Task.WhenAll(cars);
     var checkpts = _checkpoints.Select(d => d.Draw(ctx));
     await Task.WhenAll(checkpts);
+    //await _track.Draw(ctx);
 
-    await this.ctx.EndBatchAsync();
+    await ctx.EndBatchAsync();
   }
 
   private void OnStartClick()
