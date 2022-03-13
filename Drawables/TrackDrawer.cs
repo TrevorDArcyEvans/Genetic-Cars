@@ -1,14 +1,17 @@
 namespace GeneticCars.Models;
 
 using Blazor.Extensions.Canvas.Canvas2D;
+using Microsoft.AspNetCore.Components;
 
 public sealed class TrackDrawer : IDrawable
 {
   public Track Track { get; }
+  private readonly ElementReference _trackImgRef;
 
-  public TrackDrawer(Track track)
+  public TrackDrawer(Track track, ElementReference trackImgRef)
   {
     Track = track;
+    _trackImgRef = trackImgRef;
   }
 
   public async Task Draw(Canvas2DContext ctx)
@@ -16,22 +19,7 @@ public sealed class TrackDrawer : IDrawable
     await ctx.SaveAsync();
     try
     {
-      for (var x = 0; x < Track.Width; x++)
-      {
-        for (var y = 0; y < Track.Height; y++)
-        {
-          if (Track.IsTrack(x, y))
-          {
-            await ctx.SetFillStyleAsync("white");
-          }
-          else
-          {
-            await ctx.SetFillStyleAsync("black");
-          }
-
-          await ctx.FillRectAsync(x, y, 1, 1);
-        }
-      }
+      await ctx.DrawImageAsync(_trackImgRef, 0, 0);
     }
     finally
     {

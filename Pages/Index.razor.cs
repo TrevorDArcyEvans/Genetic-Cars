@@ -23,6 +23,9 @@ public partial class Index
 
   private Canvas2DContext ctx;
   private BECanvasComponent _canvas;
+  private string _image64 { get; set; }
+  private ElementReference _trackImgRef { get; set; }
+
   private int _count;
   private bool _run;
 
@@ -49,8 +52,13 @@ public partial class Index
     var trackStrm = await _client.GetByteArrayAsync("tracks/track001.png");
     var trackImg = Image.Load<Rgba32>(trackStrm);
     var track = new Track(trackImg);
-    _track = new TrackDrawer(track);
+    _track = new TrackDrawer(track, _trackImgRef);
     TrackList += Environment.NewLine + "Loaded:  tracks/track001.png";
+
+    using var outStream = new MemoryStream();
+    trackImg.SaveAsPng(outStream);
+    _image64 = "data:image/png;base64," + Convert.ToBase64String(outStream.ToArray());
+
 
     await base.OnInitializedAsync();
   }
@@ -76,8 +84,10 @@ public partial class Index
     await ctx.SetFillStyleAsync("white");
     await ctx.FillRectAsync(0, 0, CanvasWidth, CanvasHeight);
 
+    await _track.Draw(ctx);
+
     await ctx.SetFontAsync("48px solid");
-    await ctx.SetFillStyleAsync("black");
+    await ctx.SetFillStyleAsync("white");
     await ctx.FillTextAsync(_count.ToString(), 650, 650);
 
     var carDraw = _cars.OfType<CarDrawer>().SingleOrDefault();
@@ -89,7 +99,6 @@ public partial class Index
     await Task.WhenAll(cars);
     var checkpts = _checkpoints.Select(d => d.Draw(ctx));
     await Task.WhenAll(checkpts);
-    //await _track.Draw(ctx);
 
     await ctx.EndBatchAsync();
   }
