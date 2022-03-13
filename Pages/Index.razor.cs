@@ -90,10 +90,15 @@ public partial class Index
     await ctx.SetFillStyleAsync("white");
     await ctx.FillTextAsync(_count.ToString(), 650, 650);
 
-    var carDraw = _cars.OfType<CarDrawer>().SingleOrDefault();
-    carDraw?.Car.Move(1, 1);
-    carDraw?.Car.Rotate(1.5);
+    var car = _cars.OfType<CarDrawer>().SingleOrDefault()?.Car;
+    car?.Move(1, 1);
+    car?.Rotate(1.5);
     _count++;
+    if (car?.Position.X > CanvasWidth ||
+      car?.Position.Y > CanvasHeight)
+    {
+      _run = false;
+    }
 
     var cars = _cars.Select(d => d.Draw(ctx));
     await Task.WhenAll(cars);
@@ -112,10 +117,10 @@ public partial class Index
   {
     _run = false;
     _count = 0;
-    var carDraw = _cars.OfType<CarDrawer>().SingleOrDefault();
-    var pos = carDraw?.Car.Position;
-    carDraw?.Car.Move(-pos?.X ?? 0, -pos?.Y ?? 0);
-    var heading = carDraw?.Car.Heading;
-    carDraw?.Car.Rotate(heading ?? 0);
+    var car = _cars.OfType<CarDrawer>().SingleOrDefault()?.Car;
+    var pos = car?.Position;
+    car?.Move(-pos?.X ?? 0, -pos?.Y ?? 0);
+    var heading = car?.Heading;
+    car?.Rotate(heading ?? 0);
   }
 }
