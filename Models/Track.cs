@@ -7,7 +7,7 @@ public sealed class Track
 {
   // Start point is a 5x5 square of green pixels
   // This point is centre of the 5x5 square
-  public Point Start { get; }
+  public System.Drawing.Point Start { get; }
 
   // width x height
   // [x, y] track points
@@ -84,7 +84,7 @@ public sealed class Track
     return BlackWhiteImage;
   }
 
-  private Point GetStart(Image<Rgba32> inputImg)
+  private System.Drawing.Point GetStart(Image<Rgba32> inputImg)
   {
     var startPts = new List<Point>();
     inputImg.ProcessPixelRows(acc =>

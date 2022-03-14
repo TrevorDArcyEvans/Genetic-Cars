@@ -34,14 +34,10 @@ public partial class Index
 
   private readonly List<IDrawable> _checkpoints = new();
   private readonly List<IDrawable> _cars = new();
-  private IDrawable _track;
+  private TrackDrawer _track;
 
   public Index()
   {
-    var car1 = new Car(new(20, 20));
-    var carDraw1 = new CarDrawer(car1);
-    _cars.Add(carDraw1);
-
     var chkpt1 = new Checkpoint(new (200, 200));
     var chkptDraw1 = new CheckpointDrawer(chkpt1);
     _checkpoints.Add(chkptDraw1);
@@ -115,11 +111,11 @@ public partial class Index
   {
     _run = false;
     _count = 0;
-    var car = _cars.OfType<CarDrawer>().SingleOrDefault()?.Car;
-    var pos = car?.Position;
-    car?.Move(-pos?.X ?? 0, -pos?.Y ?? 0);
-    var heading = car?.Heading;
-    car?.Rotate(heading ?? 0);
+
+    _cars.Clear();
+    var car1 = new Car(_track.Track.Start);
+    var carDraw1 = new CarDrawer(car1);
+    _cars.Add(carDraw1);
   }
 
   private async Task OnTrackChangedAsync(ChangeEventArgs e)
