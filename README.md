@@ -31,7 +31,7 @@ The system is composed of a number of components:
 </details>
 
 ## Neural Network
-![](Genetic-Cars.drawio.png)
+![](Genetic-Cars.png)
 
 <details>
 
