@@ -11,9 +11,9 @@ public sealed class Car
   public Point Position => _position;
   private Point _position;
 
-  public Car(Point initialPos)
+  public Car(Point initialPos, double heading)
   {
-    _position = new Point(initialPos.X, initialPos.Y);
+    Reset(initialPos, heading);
   }
 
   public double Heading { get; private set;} // degrees
@@ -27,5 +27,12 @@ public sealed class Car
   public void Rotate(double degrees)
   {
     Heading += degrees;
+  }
+
+  public void Reset(Point startPt, double heading)
+  {
+    _position.X = startPt.X;
+    _position.Y = startPt.Y;
+    Heading = heading;
   }
 }

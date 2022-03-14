@@ -13,14 +13,14 @@ public partial class Index
 {
   private const int CanvasWidth = 800;
   private const int CanvasHeight = 800;
-  
+
   [Inject]
   private IJSRuntime JsRuntime { get; set; }
 
   [Inject]
   private HttpClient _client { get; set; }
 
-  private List<string> _trackList { get; set; } = new ();
+  private List<string> _trackList { get; set; } = new();
   private string _selTrack { get; set; }
 
   private Canvas2DContext ctx;
@@ -33,12 +33,12 @@ public partial class Index
   private string _debug { get; set; }
 
   private readonly List<IDrawable> _checkpoints = new();
-  private readonly List<IDrawable> _cars = new();
+  private readonly List<CarDrawer> _cars = new();
   private TrackDrawer _track;
 
   public Index()
   {
-    var chkpt1 = new Checkpoint(new (200, 200));
+    var chkpt1 = new Checkpoint(new(200, 200));
     var chkptDraw1 = new CheckpointDrawer(chkpt1);
     _checkpoints.Add(chkptDraw1);
   }
@@ -49,10 +49,16 @@ public partial class Index
     var trackListJson = await trackListResp.Content.ReadAsStringAsync();
     _trackList = JsonConvert.DeserializeObject<List<string>>(trackListJson);
     var trackChangeEvt = new ChangeEventArgs
-    { 
+    {
       Value = _trackList.First()
     };
     await OnTrackChangedAsync(trackChangeEvt);
+
+    var car1 = new Car(_track.Track.Start, _track.Track.Direction);
+    var carDraw1 = new CarDrawer(car1);
+    _cars.Add(carDraw1);
+
+    OnResetClick();
 
     await base.OnInitializedAsync();
   }
@@ -89,7 +95,7 @@ public partial class Index
     car?.Rotate(1.5);
     _count++;
     if (car?.Position.X > CanvasWidth ||
-      car?.Position.Y > CanvasHeight)
+        car?.Position.Y > CanvasHeight)
     {
       OnResetClick();
     }
@@ -112,10 +118,7 @@ public partial class Index
     _run = false;
     _count = 0;
 
-    _cars.Clear();
-    var car1 = new Car(_track.Track.Start);
-    var carDraw1 = new CarDrawer(car1);
-    _cars.Add(carDraw1);
+    _cars.ForEach(car => car.Car.Reset(_track.Track.Start, _track.Track.Direction));
   }
 
   private async Task OnTrackChangedAsync(ChangeEventArgs e)
@@ -131,7 +134,5 @@ public partial class Index
     using var outStream = new MemoryStream();
     trackImg.SaveAsPng(outStream);
     _image64 = "data:image/png;base64," + Convert.ToBase64String(outStream.ToArray());
-
-    OnResetClick();
   }
 }

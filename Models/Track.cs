@@ -23,6 +23,7 @@ public sealed class Track
 
   public int Width => _data.GetLength(0);
   public int Height => _data.GetLength(1);
+  public double Direction { get; private set; }
 
   public bool IsTrack(int x, int y)
   {
