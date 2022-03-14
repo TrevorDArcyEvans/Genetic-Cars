@@ -123,7 +123,8 @@ public partial class Index
     var track = new Track(trackImg);
     _track = new TrackDrawer(track, _trackImgRef);
     _debug += $"Track changed:  {_selTrack}" + Environment.NewLine;
-    _debug += $"Start:  [{track.Start.X}, {track.Start.Y}]" + Environment.NewLine;
+    _debug += $"Start:   [{track.Start.X}, {track.Start.Y}]" + Environment.NewLine;
+    _debug += $"ChkPts:  [{track.Checkpoints.Count()}]" + Environment.NewLine;
 
     using var outStream = new MemoryStream();
     trackImg.SaveAsPng(outStream);

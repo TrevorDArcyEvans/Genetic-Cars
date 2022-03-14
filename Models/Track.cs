@@ -8,6 +8,10 @@ public sealed class Track
   // Start point is a 5x5 square of green pixels
   // This point is centre of the 5x5 square
   public System.Drawing.Point Start { get; }
+  
+  // Checkpoint is a 5x5 square of red pixels
+  // This point is centre of the 5x5 square
+  public IEnumerable<System.Drawing.Point> Checkpoints { get; }
 
   public int Width => _data.GetLength(0);
   public int Height => _data.GetLength(1);
@@ -24,6 +28,7 @@ public sealed class Track
     _data = ConvertImageToBlackAndWhite(img);
     Start = GetStart(img);
     Direction = GetDirection(img);
+    Checkpoints = GetCheckpoints(img);
   }
 
   public bool IsTrack(int x, int y)
@@ -34,14 +39,14 @@ public sealed class Track
   // Convert image to black and white boolean matrix (width x height)
   // black = non-track = false
   // white = track = true
-  private static bool[,] ConvertImageToBlackAndWhite(Image<Rgba32> inputImg)
+  private static bool[,] ConvertImageToBlackAndWhite(Image<Rgba32> img)
   {
     // allocate gray image
-    byte[,] GrayImage = new byte[inputImg.Width, inputImg.Height];
-    int[] GrayLevel = new int[256];
+    var grayImage = new byte[img.Width, img.Height];
+    var grayLevel = new int[256];
 
     // convert to gray
-    inputImg.ProcessPixelRows(acc =>
+    img.ProcessPixelRows(acc =>
     {
       for (var y = 0; y < acc.Height; y++)
       {
@@ -49,47 +54,47 @@ public sealed class Track
         for (var x = 0; x < pxRow.Length - 1; x++)
         {
           ref var px = ref pxRow[x];
-          int Module = (30 * px.R + 59 * px.G + 11 * px.B) / 100;
-          GrayLevel[Module]++;
-          GrayImage[x, y] = (byte)Module;
+          var module = (30 * px.R + 59 * px.G + 11 * px.B) / 100;
+          grayLevel[module]++;
+          grayImage[x, y] = (byte)module;
         }
       }
     });
 
     // gray level cutoff between black and white
-    int LevelStart;
-    int LevelEnd;
-    for (LevelStart = 0; LevelStart < 256 && GrayLevel[LevelStart] == 0; LevelStart++)
+    int levelStart;
+    int levelEnd;
+    for (levelStart = 0; levelStart < 256 && grayLevel[levelStart] == 0; levelStart++)
     {
       // DO_NOTHING
     }
 
-    for (LevelEnd = 255; LevelEnd >= LevelStart && GrayLevel[LevelEnd] == 0; LevelEnd--)
+    for (levelEnd = 255; levelEnd >= levelStart && grayLevel[levelEnd] == 0; levelEnd--)
     {
       // DO_NOTHING
     }
 
-    LevelEnd++;
+    levelEnd++;
 
-    int CutoffLevel = (LevelStart + LevelEnd) / 2;
+    var cutoffLevel = (levelStart + levelEnd) / 2;
 
     // create boolean image white = true, black = false
-    var BlackWhiteImage = new bool[inputImg.Width, inputImg.Height];
-    for (int Row = 0; Row < inputImg.Height; Row++)
+    var blackWhiteImage = new bool[img.Width, img.Height];
+    for (var row = 0; row < img.Height; row++)
     {
-      for (int Col = 0; Col < inputImg.Width; Col++)
+      for (var col = 0; col < img.Width; col++)
       {
-        BlackWhiteImage[Col, Row] = GrayImage[Row, Col] > CutoffLevel;
+        blackWhiteImage[col, row] = grayImage[row, col] > cutoffLevel;
       }
     }
 
-    return BlackWhiteImage;
+    return blackWhiteImage;
   }
 
-  private static System.Drawing.Point GetStart(Image<Rgba32> inputImg)
+  private static System.Drawing.Point GetStart(Image<Rgba32> img)
   {
     var startPts = new List<Point>();
-    inputImg.ProcessPixelRows(acc =>
+    img.ProcessPixelRows(acc =>
     {
       for (var y = 0; y < acc.Height; y++)
       {
@@ -112,16 +117,68 @@ public sealed class Track
     return new(avgX, avgY);
   }
 
-  private static double GetDirection(Image<Rgba32> inputImg)
+  private static double GetDirection(Image<Rgba32> img)
   {
     var retval = 0d;
-    inputImg.ProcessPixelRows(acc =>
+    img.ProcessPixelRows(acc =>
     {
       var pxRow = acc.GetRowSpan(0);
       ref var px = ref pxRow[0];
       retval = px.R + px.G + px.B;
     });
 
+    return retval;
+  }
+
+  private static IEnumerable<System.Drawing.Point> GetCheckpoints(Image<Rgba32> img)
+  {
+    string GetKey(int x, int y)
+    {
+      return $"[{x},{y}]";
+    }
+
+    // points we have already checked
+    // key = [px.X,px.Y]
+    var consideredPts = new HashSet<string>();
+    
+    var chkPts = new List<Point>();
+    img.ProcessPixelRows(acc =>
+    {
+      for (var y = 0; y < acc.Height; y++)
+      {
+        var pxRow = acc.GetRowSpan(y);
+        for (var x = 0; x < pxRow.Length - 1; x++)
+        {
+          ref var px = ref pxRow[x];
+          var key = GetKey(x, y);
+          if (px.R > 245 &&
+              px.G < 10 &&
+              px.B < 10 &&
+              !consideredPts.Contains(key))
+          {
+            // if we get to here, we have found the top left hand corner of a checkpoint,
+            // so we add the centre of the 5x5 square
+            chkPts.Add(new(x + 2, y + 2));
+
+            // then add all the 25 pixels in the checkpoint so we do not check them again
+            for (var i = 0; i < 5; i++)
+            {
+              for (var j = 0; j < 5; j++)
+              {
+                consideredPts.Add(GetKey(x + i, y + j));
+              }
+            }
+          }
+          else
+          {
+            // one of:  direction, start, track or non-track
+            consideredPts.Add(key);
+          }
+        }
+      }
+    });
+
+    var retval = chkPts.Select(pt => new System.Drawing.Point(pt.X, pt.Y));
     return retval;
   }
 }
