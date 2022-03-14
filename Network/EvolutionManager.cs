@@ -83,7 +83,7 @@ public sealed class EvolutionManager
 
     if (fitness > _bestFitness) // If it is better that the current best car
     {
-      _bestNeuralNetwork = deadCar.TheNetwork; // Make sure it becomes the best car
+      _bestNeuralNetwork = deadCar.Network; // Make sure it becomes the best car
       _bestFitness = fitness; // And also set the best fitness
     }
 
