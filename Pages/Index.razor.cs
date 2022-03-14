@@ -32,15 +32,11 @@ public partial class Index
   private bool _run;
   private string _debug { get; set; }
 
-  private readonly List<IDrawable> _checkpoints = new();
   private readonly List<CarDrawer> _cars = new();
   private TrackDrawer _track;
 
   public Index()
   {
-    var chkpt1 = new Checkpoint(new(200, 200));
-    var chkptDraw1 = new CheckpointDrawer(chkpt1);
-    _checkpoints.Add(chkptDraw1);
   }
 
   protected override async Task OnInitializedAsync()
@@ -102,8 +98,6 @@ public partial class Index
 
     var cars = _cars.Select(d => d.Draw(ctx));
     await Task.WhenAll(cars);
-    var checkpts = _checkpoints.Select(d => d.Draw(ctx));
-    await Task.WhenAll(checkpts);
 
     await ctx.EndBatchAsync();
   }
