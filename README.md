@@ -1,10 +1,40 @@
 # Genetic Cars
+Training a car to drive around a track using AI.
+
 Inspired by and based on:
 * [ReInventing Neural Networks](https://www.codeproject.com/Articles/1220276/ReInventing-Neural-Networks)
 * [ReInventing Neural Networks - Part 2](https://www.codeproject.com/Articles/1220644/ReInventing-Neural-Networks-Part)
 * [ReInventing Neural Networks - Part 3](https://www.codeproject.com/Articles/1231020/ReInventing-Neural-Networks-Part-2)
 
+## Background
+
+<details>
+
+The system is composed of a number of components:
+* Car
+  * controlled by NeuralNetwork
+  * if a car goes off the track, it is destroyed
+  * if a car hits a checkpoint, its fitness increases
+* Track
+  * has a start point
+  * has an initial heading from start point aka track direction.  This is so that cars do not go off in the wrong direction!
+  * contains many checkpoints
+* Checkpoint
+  * marker on the track to measure a car's progress
+* EvolutionManager
+  * creates a large number of cars aka generation
+  * waits for all cars to be destroyed
+  * creates a new generation of cars based on best car from last generation
+* NeuralNetwork
+  * takes inputs from a car and generates outputs to control car
+
+</details>
+
 ## Neural Network
+![](Genetic-Cars.drawio.png)
+
+<details>
+
 * input layer = 6 neurons
   *  LIDAR sensors:
     *  forward
@@ -13,6 +43,8 @@ Inspired by and based on:
     *  right
     *  forward-left
     *  forward-right
+
+  Simulates a driver's vision by measuring distance to the wall in various directions.
 
 * two hidden layers = 4 & 3 neurons
 
@@ -30,9 +62,8 @@ Inspired by and based on:
       signal-processing intuition.
 
       1. If the network has only one output node and you believe that the required input–output 
-      relationship 
-          is fairly straightforward, start with a hidden-layer dimensionality that is equal to 
-          two-thirds of the input dimensionality.
+          relationship is fairly straightforward, start with a hidden-layer dimensionality that 
+          is equal to two-thirds of the input dimensionality.
       2. If you have multiple output nodes or you believe that the required input–output 
           relationship is complex, make the hidden-layer dimensionality equal to the input 
           dimensionality plus the output dimensionality (but keep it less than twice the input 
@@ -49,13 +80,50 @@ Inspired by and based on:
       This is instructive, although it should be noted that no indication of how many nodes to 
       use in each layer or how to
       learn the weights is given.
+      
       ...
+      
       ... In practice, we again have no idea how many nodes to use in the single hidden layer 
-      for a given problem nor how
-      to learn or set their weights effectively. ...
+      for a given problem nor how to learn or set their weights effectively. ...
 ```
 
 * output layer = 2 neurons
   *  linear velocity
   *  angular velocity
+
+  Simulates a driver accelerating/braking and steering.
+
+</details>
+
+## Car
+This is currently modelled as a 20x20 pixel sprite.
+
+## Track
+
+<details>
+
+Currently this is an 800x800 pixel PNG image with the following characteristics:
+* track
+  * white (RGB(255, 255, 255)
+  * defines area where cars are allowed to go
+  * must be contiguous loop
+  * should be 40-50 pixels wide
+* off track
+  * black (RGB(0, 0, 0)
+  * defines areas where cars will be destroyed
+* start point
+  * green (RGB(0, 255, 0)
+  * 5x5 square on a section of track
+  * all cars start from this point
+  * there can only be one start point in a track
+* direction
+  * taken from colour of pixel in upper left hand corner (0, 0)
+  * specifies initial heading of car from start point
+* checkpoint
+  * red (RGB(255, 0, 0)
+  * 5x5 square on a section of track
+  * multiple checkpoints around the track
+  * recommended to have several checkpoints near start point in track direction to bias cars to follow track direction
+
+</details>
 
