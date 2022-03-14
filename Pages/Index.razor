@@ -10,14 +10,13 @@
 <div id="canvasHolder" style="border-style: solid;border-color: aquamarine; width: 810px; height: 810px">
   <BECanvas Width="800" Height="800" @ref="_canvas"></BECanvas>
 
-<button @onclick="OnStartClick">Start</button>
-<button @onclick="OnResetClick">Reset</button>
-<select @onchange="@(async (e) => { await OnTrackChangedAsync(e); OnResetClick(); })" class="form-control">
-  @foreach (var track in _trackList)
-  {
-    <option value="@track">@track</option>
-  }
-</select>
-<textarea @bind="_debug"></textarea>
+  <button @onclick="OnStartClick">Start</button>
+  <button @onclick="OnResetClick">Reset</button>
+  <select @onchange="@(async (e) => { await OnTrackChangedAsync(e); OnResetClick(); })" class="form-control">
+    @foreach (var track in _trackList)
+    {
+      <option value="@track">@track</option>
+    }
+  </select>
+  <textarea @bind="_debug" style="height: 200px; width: 100%;" />
 </div>
-
