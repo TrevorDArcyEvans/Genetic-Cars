@@ -86,7 +86,8 @@ public partial class Index
     await ctx.SetFillStyleAsync("white");
     await ctx.FillTextAsync(_count.ToString(), 700, 750);
 
-    var car = _cars.OfType<CarDrawer>().SingleOrDefault()?.Car;
+    // TODO   move to EvolutionManager.Update()
+    var car = _cars.SingleOrDefault()?.Car;
     car?.Move(1, 1);
     car?.Rotate(1.5);
     _count++;
