@@ -96,7 +96,8 @@ The system is composed of a number of components:
 </details>
 
 ## Car
-This is currently modelled as a 20x20 pixel sprite.
+* currently modelled as a 20x20 pixel sprite
+* collision detection only uses (point) position and does not take size into account
 
 ## Track
 
@@ -118,6 +119,8 @@ Currently this is an 800x800 pixel PNG image with the following characteristics:
   * there can only be one start point in a track
 * direction
   * taken from colour of pixel in upper left hand corner (0, 0)
+  * `Direction = px.R + px.G + px.B`
+  * should really keep RBG values <= 120 so as not to confuse start point and checkpoint detection
   * specifies initial heading of car from start point
 * checkpoint
   * red (RGB(255, 0, 0)
