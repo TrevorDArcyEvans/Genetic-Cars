@@ -9,6 +9,10 @@ public sealed class Track
   // This point is centre of the 5x5 square
   public System.Drawing.Point Start { get; }
 
+  public int Width => _data.GetLength(0);
+  public int Height => _data.GetLength(1);
+  public double Direction { get; private set; } // degrees
+
   // width x height
   // [x, y] track points
   // true --> track
@@ -19,11 +23,8 @@ public sealed class Track
   {
     _data = ConvertImageToBlackAndWhite(img);
     Start = GetStart(img);
+    Direction = GetDirection(img);
   }
-
-  public int Width => _data.GetLength(0);
-  public int Height => _data.GetLength(1);
-  public double Direction { get; private set; }
 
   public bool IsTrack(int x, int y)
   {
@@ -33,7 +34,7 @@ public sealed class Track
   // Convert image to black and white boolean matrix (width x height)
   // black = non-track = false
   // white = track = true
-  private bool[,] ConvertImageToBlackAndWhite(Image<Rgba32> inputImg)
+  private static bool[,] ConvertImageToBlackAndWhite(Image<Rgba32> inputImg)
   {
     // allocate gray image
     byte[,] GrayImage = new byte[inputImg.Width, inputImg.Height];
@@ -85,7 +86,7 @@ public sealed class Track
     return BlackWhiteImage;
   }
 
-  private System.Drawing.Point GetStart(Image<Rgba32> inputImg)
+  private static System.Drawing.Point GetStart(Image<Rgba32> inputImg)
   {
     var startPts = new List<Point>();
     inputImg.ProcessPixelRows(acc =>
@@ -96,9 +97,9 @@ public sealed class Track
         for (var x = 0; x < pxRow.Length - 1; x++)
         {
           ref var px = ref pxRow[x];
-          if (px.G > 245 && 
-            px.R < 10 && 
-            px.B < 10)
+          if (px.G > 245 &&
+              px.R < 10 &&
+              px.B < 10)
           {
             startPts.Add(new(x, y));
           }
@@ -108,6 +109,19 @@ public sealed class Track
 
     var avgX = startPts.Sum(pt => pt.X) / startPts.Count;
     var avgY = startPts.Sum(pt => pt.Y) / startPts.Count;
-    return new (avgX, avgY);
+    return new(avgX, avgY);
+  }
+
+  private static double GetDirection(Image<Rgba32> inputImg)
+  {
+    var retval = 0d;
+    inputImg.ProcessPixelRows(acc =>
+    {
+      var pxRow = acc.GetRowSpan(0);
+      ref var px = ref pxRow[0];
+      retval = px.R + px.G + px.B;
+    });
+
+    return retval;
   }
 }
