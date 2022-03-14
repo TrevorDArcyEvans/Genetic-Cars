@@ -28,6 +28,9 @@ public sealed class CarNetwork
 
     // Moves the car
     Move(linear, angular);
+    
+    // TODO     CheckpointHit()
+    // TODO     OffTrack()
   }
 
   // Casts all the rays, puts them through the NeuralNetwork and outputs the Move Axis
@@ -89,23 +92,21 @@ public sealed class CarNetwork
   // angular velocity in degrees
   //
   // NOTE:  both values will be either -1, 0, or +1
-  public void Move(double linear, double angular)
+  private void Move(double linear, double angular)
   {
     // TODO     Move underlying car
-    // TODO     CheckpointHit()
-    // TODO     OffTrack()
   }
 
   // This function is when the car hits any checkpoints
-  public void CheckpointHit()
+  private void CheckpointHit()
   {
     // Increase Fitness/Score
     Fitness++;
   }
 
   // Called when the car goes off track
-  public void OffTrack()
+  private void OffTrack()
   {
-    EvolutionManager.Instance.CarDead(this, Fitness); // Tell the Evolution Manager that the car is dead
+    EvolutionManager.Instance.CarDead(this); // Tell the Evolution Manager that the car is dead
   }
 }

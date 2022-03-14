@@ -41,6 +41,11 @@ public sealed class EvolutionManager
     StartGeneration();
   }
 
+  public void Update()
+  {
+    _cars.ForEach(car => car.Update());
+  }
+  
   // Starts a whole new generation
   private void StartGeneration()
   {
@@ -77,14 +82,14 @@ public sealed class EvolutionManager
   }
 
   // Gets called by cars when they die
-  public void CarDead(CarNetwork deadCar, int fitness)
+  public void CarDead(CarNetwork deadCar)
   {
     _cars.Remove(deadCar); // Remove the car from the list
 
-    if (fitness > _bestFitness) // If it is better that the current best car
+    if (deadCar.Fitness > _bestFitness) // If it is better that the current best car
     {
       _bestNeuralNetwork = deadCar.Network; // Make sure it becomes the best car
-      _bestFitness = fitness; // And also set the best fitness
+      _bestFitness = deadCar.Fitness; // And also set the best fitness
     }
 
     if (_cars.Count > 0)
