@@ -19,8 +19,10 @@ public sealed class EvolutionManager
   // The number of cars per generation
   private const int CarCount = 100;
 
+  private const int MaxGenerations = 10;
+  
   // The current generation number
-  private int _generationCount = 0;
+  private int _generationCount;
 
   // This list of cars currently alive
   private readonly List<CarNetwork> _cars = new();
@@ -43,6 +45,10 @@ public sealed class EvolutionManager
   private void StartGeneration()
   {
     _generationCount++; // Increment the generation count
+    if (_generationCount > MaxGenerations)
+    {
+      return;
+    }
 
     for (var i = 0; i < CarCount; i++)
     {
@@ -81,9 +87,11 @@ public sealed class EvolutionManager
       _bestFitness = fitness; // And also set the best fitness
     }
 
-    if (_cars.Count <= 0) // If there are no cars left
+    if (_cars.Count > 0)
     {
-      StartGeneration(); // Create a new generation
+      return;
     }
+
+    StartGeneration(); // Create a new generation
   }
 }
