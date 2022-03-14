@@ -46,7 +46,7 @@ The system is composed of a number of components:
     *  forward-left
     *  forward-right
 
-  Simulates a driver's vision by measuring distance to the wall in various directions.
+  Simulates a driver's vision by measuring distance to the track edge in various directions.
 
 * two hidden layers = 4 & 3 neurons
 
