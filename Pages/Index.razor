@@ -12,7 +12,7 @@
 
 <button @onclick="OnStartClick">Start</button>
 <button @onclick="OnResetClick">Reset</button>
-<select @onchange="@(async (e) => await OnTrackChangedAsync(e))" class="form-control">
+<select @onchange="@(async (e) => { await OnTrackChangedAsync(e); OnResetClick(); })" class="form-control">
   @foreach (var track in _trackList)
   {
     <option value="@track">@track</option>
