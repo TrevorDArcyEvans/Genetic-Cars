@@ -8,16 +8,13 @@
 
 namespace GeneticCars.Network;
 
+using System.Collections.ObjectModel;
+using GeneticCars.Models;
+
 public sealed class EvolutionManager
 {
-  private static readonly Lazy<EvolutionManager> _lazy = new(() => new());
-  public static EvolutionManager Instance => _lazy.Value;
-
   // Should we use node mutation?
   private const bool UseNodeMutation = true;
-
-  // The number of cars per generation
-  private const int CarCount = 100;
 
   private const int MaxGenerations = 10;
   
@@ -25,7 +22,8 @@ public sealed class EvolutionManager
   private int _generationCount;
 
   // This list of cars currently alive
-  private readonly List<CarNetwork> _cars = new();
+  private readonly List<CarNetwork> _carNets = new();
+  private readonly ReadOnlyCollection<Car> _cars;
 
   // The best NeuralNetwork currently available
   private NeuralNetwork _bestNeuralNetwork;
@@ -33,8 +31,12 @@ public sealed class EvolutionManager
   // The Fitness of the best NeuralNetwork ever created
   private int _bestFitness = -1;
 
-  private EvolutionManager()
+  private readonly Track _track;
+
+  public EvolutionManager(Track track, ReadOnlyCollection<Car> cars)
   {
+    (_track, _cars) = (track, cars);
+
     // Set the BestNeuralNetwork to a random new network
     _bestNeuralNetwork = new NeuralNetwork(CarNetwork.NextNetwork);
 
@@ -43,7 +45,7 @@ public sealed class EvolutionManager
 
   public void Update()
   {
-    _cars.ForEach(car => car.Update());
+    _carNets.ForEach(car => car.Update());
   }
   
   // Starts a whole new generation
@@ -55,7 +57,7 @@ public sealed class EvolutionManager
       return;
     }
 
-    for (var i = 0; i < CarCount; i++)
+    for (var i = 0; i < _cars.Count(); i++)
     {
       if (i == 0)
       {
@@ -77,14 +79,15 @@ public sealed class EvolutionManager
       }
 
       // Instantiate a new car and add it to the list of cars
-      // TODO   _cars.Add(Instantiate(CarPrefab, transform.position, Quaternion.identity, transform).GetComponent<Car>());
+      var car = new CarNetwork(this, _cars[i], _track);
+      _carNets.Add(car);
     }
   }
 
   // Gets called by cars when they die
   public void CarDead(CarNetwork deadCar)
   {
-    _cars.Remove(deadCar); // Remove the car from the list
+    _carNets.Remove(deadCar); // Remove the car from the list
 
     if (deadCar.Fitness > _bestFitness) // If it is better that the current best car
     {
@@ -92,7 +95,7 @@ public sealed class EvolutionManager
       _bestFitness = deadCar.Fitness; // And also set the best fitness
     }
 
-    if (_cars.Count > 0)
+    if (_carNets.Count > 0)
     {
       return;
     }

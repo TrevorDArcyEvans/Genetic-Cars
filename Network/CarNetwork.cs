@@ -22,6 +22,28 @@ public sealed class CarNetwork
   // The NeuralNetwork of the current car
   public NeuralNetwork Network { get; private set; }
 
+  private readonly EvolutionManager _evMgr;
+  private readonly Car _car;
+  private readonly Track _track;
+
+  public CarNetwork(EvolutionManager evMgr, Car car, Track track)
+  {
+    (_evMgr, _car, _track)  = (evMgr, car, track);
+
+    // Sets the current network to the Next Network
+    Network = NextNetwork;
+
+    // Make sure the Next Network is reassigned to avoid having another car use the same network
+    NextNetwork = new NeuralNetwork(NextNetwork.Topology, null); 
+
+    // Start checking if the score stayed the same for a lot of time
+    new Thread(() => 
+    {
+      Thread.CurrentThread.IsBackground = true; 
+      IsNotImproving();
+    }).Start();
+  }
+
   public void Update()
   {
     GetNeuralInputAxis(out var linear, out var angular);
@@ -29,8 +51,8 @@ public sealed class CarNetwork
     // Moves the car
     Move(linear, angular);
     
-    // TODO     CheckpointHit()
-    // TODO     OffTrack()
+    TestCheckpointHit();
+    TestOffTrack();
   }
 
   // Casts all the rays, puts them through the NeuralNetwork and outputs the Move Axis
@@ -41,14 +63,14 @@ public sealed class CarNetwork
     // assumes 6 neurons in input layer
     var neuralInput = new double[NextNetwork.Topology[0]];
 
-    // TODO   forward   neuralInput[0] = CastRay(transform.forward, -Vector2.UnitX) / 4;  
-    // TODO   back   neuralInput[1] = CastRay(-transform.forward, -Vector3.forward) / 4;  
-    // TODO   left   neuralInput[2] = CastRay(transform.right, Vector3.right) / 4;  
-    // TODO   right    neuralInput[3] = CastRay(-transform.right, -Vector3.right) / 4;  
+    // TODO   forward   neuralInput[0] = DistanceToTrackEdge(transform.forward, -Vector2.UnitX) / 4;  
+    // TODO   back   neuralInput[1] = DistanceToTrackEdge(-transform.forward, -Vector3.forward) / 4;  
+    // TODO   left   neuralInput[2] = DistanceToTrackEdge(transform.right, Vector3.right) / 4;  
+    // TODO   right    neuralInput[3] = DistanceToTrackEdge(-transform.right, -Vector3.right) / 4;  
 
     const double SqrtHalf = 0.707;
-    // TODO   forward-left   neuralInput[4] = CastRay(transform.right * SqrtHalf + transform.forward * SqrtHalf, Vector3.right * SqrtHalf + Vector3.forward * SqrtHalf) / 4;  
-    // TODO   forward-right   neuralInput[5] = CastRay(transform.right * SqrtHalf + -transform.forward * SqrtHalf, Vector3.right * SqrtHalf + -Vector3.forward * SqrtHalf) / 4; 
+    // TODO   forward-left   neuralInput[4] = DistanceToTrackEdge(transform.right * SqrtHalf + transform.forward * SqrtHalf, Vector3.right * SqrtHalf + Vector3.forward * SqrtHalf) / 4;  
+    // TODO   forward-right   neuralInput[5] = DistanceToTrackEdge(transform.right * SqrtHalf + -transform.forward * SqrtHalf, Vector3.right * SqrtHalf + -Vector3.forward * SqrtHalf) / 4; 
 
     // Feed through the network
     // assumes 2 neurons in output layer
@@ -94,19 +116,47 @@ public sealed class CarNetwork
   // NOTE:  both values will be either -1, 0, or +1
   private void Move(double linear, double angular)
   {
-    // TODO     Move underlying car
+    // Move underlying car
+    _car.Move((int)(linear * 3), (int)(angular * 4));
   }
 
   // This function is when the car hits any checkpoints
-  private void CheckpointHit()
+  private void TestCheckpointHit()
   {
-    // Increase Fitness/Score
-    Fitness++;
+    var carVec = new Vector2(_car.Position.X, _car.Position.Y);
+    if (_track.Checkpoints.Any(cp => 
+    {
+      var cpVec = new Vector2(cp.X, cp.Y);
+      var distSq = Vector2.DistanceSquared(carVec, cpVec);
+      return distSq < 9;
+    }))
+    {
+      // Increase Fitness/Score
+      Fitness++;
+    }
   }
 
-  // Called when the car goes off track
-  private void OffTrack()
+  // check if car is off track
+  private void TestOffTrack()
   {
-    EvolutionManager.Instance.CarDead(this); // Tell the Evolution Manager that the car is dead
+    if (!_track.IsTrack(_car.Position.X, _car.Position.Y))
+    {
+      _evMgr.CarDead(this); // Tell the Evolution Manager that the car is dead
+    }
   }
+
+    // Checks each few seconds if the car didn't make any improvement
+    private void IsNotImproving()
+    {
+      int oldFitness = Fitness; // Save the initial fitness
+      while (true)
+      {
+        // wait for some time
+        Thread.Sleep(TimeSpan.FromMilliseconds(100));
+        if (oldFitness == Fitness) // Check if the fitness didn't change yet
+        {
+          _evMgr.CarDead(this); // Tell the Evolution Manager that the car is dead
+        }
+      }
+    }
 }
