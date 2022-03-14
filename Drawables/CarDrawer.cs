@@ -1,6 +1,5 @@
 namespace GeneticCars.Models;
 
-using System.Drawing;
 using Blazor.Extensions.Canvas.Canvas2D;
 
 public sealed class CarDrawer : IDrawable
@@ -23,13 +22,13 @@ public sealed class CarDrawer : IDrawable
 
       // body
       await ctx.SetFillStyleAsync("blue");
-      await ctx.FillRectAsync(Car.Position.X, Car.Position.Y, Car.Width, Car.Height);
+      await ctx.FillRectAsync(Car.Position.X - Car.Width / 2, Car.Position.Y, Car.Width, Car.Height);
 
       // nose
       const int NoseWidth = 10;
       const int NoseHeight = 10;
       await ctx.SetFillStyleAsync("orange");
-      await ctx.FillRectAsync(Car.Position.X + Car.Width / 2 - NoseWidth / 2, Car.Position.Y - 3, NoseWidth, NoseHeight);
+      await ctx.FillRectAsync(Car.Position.X - NoseWidth / 2, Car.Position.Y, NoseWidth, NoseHeight);
 
       // lidar
       const int LidarSenseWidth = 3;
@@ -37,31 +36,29 @@ public sealed class CarDrawer : IDrawable
       await ctx.SetLineWidthAsync(LidarSenseWidth);
       await ctx.BeginPathAsync();
 
-      var nose = new Point(Car.Position.X + Car.Width / 2, Car.Position.Y);
-
       // forward
-      await ctx.MoveToAsync(nose.X, nose.Y);
-      await ctx.LineToAsync(nose.X, Car.Position.Y - Car.LidarSenseDist);
+      await ctx.MoveToAsync(Car.Position.X, Car.Position.Y);
+      await ctx.LineToAsync(Car.Position.X, Car.Position.Y - Car.LidarSenseDist);
 
       // right
-      await ctx.MoveToAsync(nose.X, nose.Y);
-      await ctx.LineToAsync(nose.X + Car.LidarSenseDist, nose.Y);
+      await ctx.MoveToAsync(Car.Position.X, Car.Position.Y);
+      await ctx.LineToAsync(Car.Position.X + Car.LidarSenseDist, Car.Position.Y);
 
       // left
-      await ctx.MoveToAsync(nose.X, nose.Y);
-      await ctx.LineToAsync(nose.X - Car.LidarSenseDist, nose.Y);
+      await ctx.MoveToAsync(Car.Position.X, Car.Position.Y);
+      await ctx.LineToAsync(Car.Position.X - Car.LidarSenseDist, Car.Position.Y);
 
       // forward-right
-      await ctx.MoveToAsync(nose.X, nose.Y);
-      await ctx.LineToAsync(nose.X + Car.LidarSenseDist * 0.707, nose.Y - Car.LidarSenseDist * 0.707);
+      await ctx.MoveToAsync(Car.Position.X, Car.Position.Y);
+      await ctx.LineToAsync(Car.Position.X + Car.LidarSenseDist * 0.707, Car.Position.Y - Car.LidarSenseDist * 0.707);
 
       // forward-left
-      await ctx.MoveToAsync(nose.X, nose.Y);
-      await ctx.LineToAsync(nose.X - Car.LidarSenseDist * 0.707, nose.Y - Car.LidarSenseDist * 0.707);
+      await ctx.MoveToAsync(Car.Position.X, Car.Position.Y);
+      await ctx.LineToAsync(Car.Position.X - Car.LidarSenseDist * 0.707, Car.Position.Y - Car.LidarSenseDist * 0.707);
 
       // back
-      await ctx.MoveToAsync(nose.X, nose.Y + Car.Height);
-      await ctx.LineToAsync(nose.X, nose.Y + Car.Height + Car.LidarSenseDist);
+      await ctx.MoveToAsync(Car.Position.X, Car.Position.Y + Car.Height);
+      await ctx.LineToAsync(Car.Position.X, Car.Position.Y + Car.Height + Car.LidarSenseDist);
 
       await ctx.StrokeAsync();
     }

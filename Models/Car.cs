@@ -8,6 +8,9 @@ public sealed class Car
   public const int Height = 20;
   public const int LidarSenseDist = 100;
 
+  /// <summary>
+  /// Location of nose of car
+  /// </summary>
   public Point Position => _position;
   private Point _position;
 
