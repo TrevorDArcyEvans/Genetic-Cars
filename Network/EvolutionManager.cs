@@ -10,8 +10,8 @@ namespace GeneticCars.Network;
 
 public sealed class EvolutionManager
 {
-  // The current EvolutionManager Instance
-  public static EvolutionManager Instance;
+  private static readonly Lazy<EvolutionManager> _lazy = new(() => new());
+  public static EvolutionManager Instance => _lazy.Value;
 
   // Should we use node mutation?
   private const bool UseNodeMutation = true;
@@ -31,14 +31,8 @@ public sealed class EvolutionManager
   // The Fitness of the best NeuralNetwork ever created
   private int _bestFitness = -1;
 
-  // Unity-Start
-  private void Start()
+  private EvolutionManager()
   {
-    if (Instance == null) // If no other instances were created
-    {
-      Instance = this; // Make the only instance this one
-    }
-
     // Set the BestNeuralNetwork to a random new network
     _bestNeuralNetwork = new NeuralNetwork(CarNetwork.NextNetwork);
 
