@@ -17,22 +17,22 @@ public sealed class NeuralNetwork
   {
     get
     {
-      var result = new uint[_theTopology.Count];
+      var result = new uint[_topology.Count];
 
-      _theTopology.CopyTo(result, 0);
+      _topology.CopyTo(result, 0);
 
       return result;
     }
   }
 
   // Contains the topology of the NeuralNetwork
-  private readonly ReadOnlyCollection<uint> _theTopology;
+  private readonly ReadOnlyCollection<uint> _topology;
 
   // Contains the all the sections of the NeuralNetwork
   private readonly NeuralSection[] _sections;
 
   // It is the Random instance used to mutate the NeuralNetwork
-  private readonly Random _theRandomizer;
+  private readonly Random _randomizer;
 
   private class NeuralSection
   {
@@ -41,7 +41,7 @@ public sealed class NeuralNetwork
     private readonly double[][] _weights;
 
     // Contains a reference to the Random instance of the NeuralNetwork
-    private readonly Random _theRandomizer;
+    private readonly Random _randomizer;
 
     /// <summary>
     /// Initiate a NeuralSection from a topology and a seed.
@@ -63,7 +63,7 @@ public sealed class NeuralNetwork
       }
 
       // Set Randomizer
-      _theRandomizer = randomizer ?? throw new ArgumentException("The randomizer cannot be set to null.", nameof(randomizer));
+      _randomizer = randomizer ?? throw new ArgumentException("The randomizer cannot be set to null.", nameof(randomizer));
 
       // Initialize the Weights array
       // +1 for the Bias Neuron
@@ -79,7 +79,7 @@ public sealed class NeuralNetwork
       {
         for (var j = 0; j < weight.Length; j++)
         {
-          weight[j] = _theRandomizer.NextDouble() - 0.5f;
+          weight[j] = _randomizer.NextDouble() - 0.5f;
         }
       }
     }
@@ -91,7 +91,7 @@ public sealed class NeuralNetwork
     public NeuralSection(NeuralSection main)
     {
       // Set Randomizer
-      _theRandomizer = main._theRandomizer;
+      _randomizer = main._randomizer;
 
       // Initialize Weights
       _weights = new double[main._weights.Length][];
@@ -169,9 +169,9 @@ public sealed class NeuralNetwork
       {
         for (var j = 0; j < weight.Length; j++)
         {
-          if (_theRandomizer.NextDouble() < mutationProbability)
+          if (_randomizer.NextDouble() < mutationProbability)
           {
-            weight[j] = _theRandomizer.NextDouble() * (mutationAmount * 2) - mutationAmount;
+            weight[j] = _randomizer.NextDouble() * (mutationAmount * 2) - mutationAmount;
           }
         }
       }
@@ -186,11 +186,11 @@ public sealed class NeuralNetwork
     {
       for (var j = 0; j < _weights[0].Length; j++) // For each output node
       {
-        if (_theRandomizer.NextDouble() < mutationProbability) // Check if we are going to mutate this node
+        if (_randomizer.NextDouble() < mutationProbability) // Check if we are going to mutate this node
         {
           foreach (var weight in _weights)
           {
-            weight[j] = _theRandomizer.NextDouble() * (mutationAmount * 2) - mutationAmount; // Mutate the weight connecting both nodes
+            weight[j] = _randomizer.NextDouble() * (mutationAmount * 2) - mutationAmount; // Mutate the weight connecting both nodes
           }
         }
       }
@@ -234,18 +234,18 @@ public sealed class NeuralNetwork
     }
 
     // Initialize Randomizer
-    _theRandomizer = seed.HasValue ? new Random(seed.Value) : new Random();
+    _randomizer = seed.HasValue ? new Random(seed.Value) : new Random();
 
     // Set Topology
-    _theTopology = new List<uint>(topology).AsReadOnly();
+    _topology = new List<uint>(topology).AsReadOnly();
 
     // Initialize Sections
-    _sections = new NeuralSection[_theTopology.Count - 1];
+    _sections = new NeuralSection[_topology.Count - 1];
 
     // Set the Sections
     for (var i = 0; i < _sections.Length; i++)
     {
-      _sections[i] = new NeuralSection(_theTopology[i], _theTopology[i + 1], _theRandomizer);
+      _sections[i] = new NeuralSection(_topology[i], _topology[i + 1], _randomizer);
     }
   }
 
@@ -256,13 +256,13 @@ public sealed class NeuralNetwork
   public NeuralNetwork(NeuralNetwork main)
   {
     // Initialize Randomizer
-    _theRandomizer = new Random(main._theRandomizer.Next());
+    _randomizer = new Random(main._randomizer.Next());
 
     // Set Topology
-    _theTopology = main._theTopology;
+    _topology = main._topology;
 
     // Initialize Sections
-    _sections = new NeuralSection[_theTopology.Count - 1];
+    _sections = new NeuralSection[_topology.Count - 1];
 
     // Set the Sections
     for (var i = 0; i < _sections.Length; i++)
@@ -284,7 +284,7 @@ public sealed class NeuralNetwork
       throw new ArgumentException("The input array cannot be set to null.", nameof(input));
     }
 
-    if (input.Length != _theTopology[0])
+    if (input.Length != _topology[0])
     {
       throw new ArgumentException("The input array's length does not match the number of neurons in the input layer.", nameof(input));
     }
