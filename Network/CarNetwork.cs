@@ -20,23 +20,20 @@ public sealed class CarNetwork
   public int Fitness { get; private set; }
 
   // The NeuralNetwork of the current car
-  public NeuralNetwork TheNetwork { get; private set; }
+  public NeuralNetwork Network { get; private set; }
 
   public void Update()
   {
-    float Vertical; // linear velocity
-    float Horizontal; // angular velocity
-
-    GetNeuralInputAxis(out Vertical, out Horizontal);
+    GetNeuralInputAxis(out var linear, out var angular);
 
     // Moves the car
-    Move(Vertical, Horizontal);
+    Move(linear, angular);
   }
 
   // Casts all the rays, puts them through the NeuralNetwork and outputs the Move Axis
   // Vertical --> linear velocity
   // Horizontal --> angular velocity
-  private void GetNeuralInputAxis(out float Vertical, out float Horizontal)
+  private void GetNeuralInputAxis(out double linear, out double angular)
   {
     // assumes 6 neurons in input layer
     var neuralInput = new double[NextNetwork.Topology[0]];
@@ -52,9 +49,9 @@ public sealed class CarNetwork
 
     // Feed through the network
     // assumes 2 neurons in output layer
-    var neuralOutput = TheNetwork.FeedForward(neuralInput);
+    var neuralOutput = Network.FeedForward(neuralInput);
 
-    Vertical = neuralOutput[0] switch
+    linear = neuralOutput[0] switch
     {
       // Get Vertical Value aka linear velocity
       // sigmoid activation function?
@@ -63,7 +60,7 @@ public sealed class CarNetwork
       _ => 0
     };
 
-    Horizontal = neuralOutput[1] switch
+    angular = neuralOutput[1] switch
     {
       // Get Horizontal Value aka angular velocity
       // sigmoid activation function?
@@ -73,9 +70,9 @@ public sealed class CarNetwork
     };
 
     // If the output is just standing still, then move the car forward
-    if (Vertical == 0 && Horizontal == 0)
+    if (linear == 0 && angular == 0)
     {
-      Vertical = 1;
+      linear = 1;
     }
   }
 
@@ -88,16 +85,18 @@ public sealed class CarNetwork
   }
 
   // The main function that moves the car.
-  // v --> linear velocity
-  // h --> angular velocity
+  // linear velocity
+  // angular velocity in degrees
   //
   // NOTE:  both values will be either -1, 0, or +1
-  public void Move(float v, float h)
+  public void Move(double linear, double angular)
   {
     // TODO     Move underlying car
+    // TODO     CheckpointHit()
+    // TODO     OffTrack()
   }
 
-  // This function is called through all the checkpoints when the car hits any
+  // This function is when the car hits any checkpoints
   public void CheckpointHit()
   {
     // Increase Fitness/Score
