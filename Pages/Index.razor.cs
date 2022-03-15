@@ -2,6 +2,7 @@
 
 using Blazor.Extensions;
 using Blazor.Extensions.Canvas.Canvas2D;
+using GeneticCars.Network;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using Models;
@@ -35,9 +36,7 @@ public partial class Index
   private readonly List<CarDrawer> _cars = new();
   private TrackDrawer _track;
 
-  public Index()
-  {
-  }
+  private EvolutionManager _evMgr;
 
   protected override async Task OnInitializedAsync()
   {
@@ -53,6 +52,9 @@ public partial class Index
     var car1 = new Car(_track.Track.Start, _track.Track.Direction);
     var carDraw1 = new CarDrawer(car1);
     _cars.Add(carDraw1);
+
+    var cars = _cars.Select(car => car.Car).ToList().AsReadOnly();
+    _evMgr = new(_track.Track, cars);
 
     OnResetClick();
 
@@ -87,10 +89,9 @@ public partial class Index
     await ctx.FillTextAsync(_count.ToString(), 700, 750);
 
     // TODO   move to EvolutionManager.Update()
-    var car = _cars.SingleOrDefault()?.Car;
-    car?.Move(1, 1);
-    car?.Rotate(1.5);
+    _evMgr.Update();
     _count++;
+    var car = _cars.SingleOrDefault().Car;
     if (car?.Position.X > CanvasWidth ||
         car?.Position.Y > CanvasHeight)
     {

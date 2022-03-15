@@ -36,12 +36,14 @@ public sealed class CarNetwork
     // Make sure the Next Network is reassigned to avoid having another car use the same network
     NextNetwork = new NeuralNetwork(NextNetwork.Topology, null); 
 
+    #if false
     // Start checking if the score stayed the same for a lot of time
     new Thread(() => 
     {
       Thread.CurrentThread.IsBackground = true; 
       IsNotImproving();
     }).Start();
+    #endif
   }
 
   public void Update()
@@ -49,7 +51,8 @@ public sealed class CarNetwork
     GetNeuralInputAxis(out var linear, out var angular);
 
     // Moves the car
-    Move(linear, angular);
+    //Move(linear, angular);
+    Move(1, 1);
     
     TestCheckpointHit();
     TestOffTrack();
@@ -117,7 +120,10 @@ public sealed class CarNetwork
   private void Move(double linear, double angular)
   {
     // Move underlying car
-    _car.Move((int)(linear * 3), (int)(angular * 4));
+    _car.Heading += angular * 4;
+    var deltaX = linear * Math.Sin(_car.Heading.ToRadians()) * 4;
+    var deltaY = linear * Math.Cos(_car.Heading.ToRadians()) * 4;
+    _car.Move((int)(deltaX), (int)(deltaY));
   }
 
   // This function is when the car hits any checkpoints
