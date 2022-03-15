@@ -58,7 +58,7 @@ public sealed class CarDrawer : IDrawable
 
       // back
       await ctx.MoveToAsync(Car.Position.X, Car.Position.Y + Car.Height);
-      await ctx.LineToAsync(Car.Position.X, Car.Position.Y + Car.Height + Car.LidarSenseDist);
+      await ctx.LineToAsync(Car.Position.X, Car.Position.Y + Car.LidarSenseDist);
 
       await ctx.StrokeAsync();
     }
