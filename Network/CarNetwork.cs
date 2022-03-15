@@ -1,4 +1,4 @@
-﻿// stolen from:
+// stolen from:
 //      ReInventing Neural Networks
 //          https://www.codeproject.com/Articles/1220276/ReInventing-Neural-Networks
 //      ReInventing Neural Networks - Part 2
@@ -120,7 +120,7 @@ public sealed class CarNetwork
   private void Move(double linear, double angular)
   {
     // Move underlying car
-    _car.Heading += angular * 4;
+    _car.Heading += angular;
     var deltaX = linear * Math.Sin(_car.Heading.ToRadians()) * 4;
     var deltaY = linear * Math.Cos(_car.Heading.ToRadians()) * 4;
     _car.Move((int)(deltaX), (int)(deltaY));
