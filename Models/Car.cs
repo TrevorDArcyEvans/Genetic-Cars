@@ -6,7 +6,7 @@ public sealed class Car
 {
   public const int Width = 20;
   public const int Height = 20;
-  public const int LidarSenseDist = 100;
+  public const int LidarSenseDist = 40;
 
   /// <summary>
   /// Location of nose of car

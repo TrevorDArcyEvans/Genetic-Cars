@@ -55,7 +55,7 @@ public sealed class CarNetwork
     Move(1, 1);
     
     TestCheckpointHit();
-    TestOffTrack();
+    //TestOffTrack();
   }
 
   // Casts all the rays, puts them through the NeuralNetwork and outputs the Move Axis
