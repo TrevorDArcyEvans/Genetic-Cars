@@ -84,7 +84,7 @@ public sealed class Track
     {
       for (var col = 0; col < img.Width; col++)
       {
-        blackWhiteImage[col, row] = grayImage[row, col] > cutoffLevel;
+        blackWhiteImage[row, col] = grayImage[row, col] > cutoffLevel;
       }
     }
 
