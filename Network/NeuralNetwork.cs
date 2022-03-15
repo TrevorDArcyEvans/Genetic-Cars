@@ -186,12 +186,14 @@ public sealed class NeuralNetwork
     {
       for (var j = 0; j < _weights[0].Length; j++) // For each output node
       {
-        if (_randomizer.NextDouble() < mutationProbability) // Check if we are going to mutate this node
+        if (!(_randomizer.NextDouble() < mutationProbability))
         {
-          foreach (var weight in _weights)
-          {
-            weight[j] = _randomizer.NextDouble() * (mutationAmount * 2) - mutationAmount; // Mutate the weight connecting both nodes
-          }
+          continue;
+        }
+
+        foreach (var weight in _weights)
+        {
+          weight[j] = _randomizer.NextDouble() * (mutationAmount * 2) - mutationAmount; // Mutate the weight connecting both nodes
         }
       }
     }
@@ -225,12 +227,9 @@ public sealed class NeuralNetwork
       throw new ArgumentException("A Neural Network cannot contain less than 2 Layers.", nameof(topology));
     }
 
-    foreach (var numNeurons in topology)
+    if (topology.Any(numNeurons => numNeurons < 1))
     {
-      if (numNeurons < 1)
-      {
-        throw new ArgumentException("A single layer of neurons must contain, at least, one neuron.", nameof(topology));
-      }
+      throw new ArgumentException("A single layer of neurons must contain, at least, one neuron.", nameof(topology));
     }
 
     // Initialize Randomizer

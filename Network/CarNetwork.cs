@@ -20,7 +20,7 @@ public sealed class CarNetwork
   public int Fitness { get; private set; }
 
   // The NeuralNetwork of the current car
-  public NeuralNetwork Network { get; private set; }
+  public NeuralNetwork Network { get; }
 
   private readonly EvolutionManager _evMgr;
   private readonly Car _car;
@@ -148,7 +148,7 @@ public sealed class CarNetwork
     // Checks each few seconds if the car didn't make any improvement
     private void IsNotImproving()
     {
-      int oldFitness = Fitness; // Save the initial fitness
+      var oldFitness = Fitness; // Save the initial fitness
       while (true)
       {
         // wait for some time

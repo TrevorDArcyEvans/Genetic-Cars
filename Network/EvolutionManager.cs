@@ -9,7 +9,7 @@
 namespace GeneticCars.Network;
 
 using System.Collections.ObjectModel;
-using GeneticCars.Models;
+using Models;
 
 public sealed class EvolutionManager
 {
@@ -57,7 +57,7 @@ public sealed class EvolutionManager
       return;
     }
 
-    for (var i = 0; i < _cars.Count(); i++)
+    for (var i = 0; i < _cars.Count; i++)
     {
       if (i == 0)
       {
