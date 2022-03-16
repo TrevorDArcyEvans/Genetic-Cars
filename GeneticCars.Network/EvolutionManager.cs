@@ -17,7 +17,7 @@ public sealed class EvolutionManager
   private const bool UseNodeMutation = true;
 
   private const int MaxGenerations = 10;
-  
+
   // The current generation number
   private int _generationCount;
 
@@ -49,8 +49,13 @@ public sealed class EvolutionManager
     _carNets.ForEach(car => car.Update());
     _carNetsPendingRemoval.ForEach(car => _carNets.Remove(car));
     _carNetsPendingRemoval.Clear();
+
+    if (_carNets.Count == 0)
+    {
+      StartGeneration(); // Create a new generation
+    }
   }
-  
+
   public void Reset()
   {
     _generationCount = 0;
@@ -90,6 +95,7 @@ public sealed class EvolutionManager
       }
 
       // Instantiate a new car and add it to the list of cars
+      _cars[i].Reset(_track.Start, _track.Direction);
       var car = new CarNetwork(this, _cars[i], _track);
       _carNets.Add(car);
     }
@@ -98,19 +104,17 @@ public sealed class EvolutionManager
   // Gets called by cars when they die
   public void CarDead(CarNetwork deadCar)
   {
+    // This will be called indirectly from Update(), so we have to use a
+    // pending removal list because cannot remove car from _carNets while
+    // we are iterating over it
     _carNetsPendingRemoval.Add(deadCar); // add the car to pending removals
 
-    if (deadCar.Fitness > _bestFitness) // If it is better that the current best car
-    {
-      _bestNeuralNetwork = deadCar.Network; // Make sure it becomes the best car
-      _bestFitness = deadCar.Fitness; // And also set the best fitness
-    }
-
-    if (_carNets.Count > 0)
+    if (deadCar.Fitness <= _bestFitness)
     {
       return;
     }
 
-    //StartGeneration(); // Create a new generation
+    _bestNeuralNetwork = deadCar.Network; // Make sure it becomes the best car
+    _bestFitness = deadCar.Fitness; // And also set the best fitness
   }
 }
