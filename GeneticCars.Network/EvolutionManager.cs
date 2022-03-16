@@ -19,7 +19,7 @@ public sealed class EvolutionManager
   private const int MaxGenerations = 10;
 
   // The current generation number
-  private int _generationCount;
+  public int GenerationCount { get; private set; }
 
   // This list of cars currently alive
   private readonly List<CarNetwork> _carNets = new();
@@ -58,7 +58,7 @@ public sealed class EvolutionManager
 
   public void Reset()
   {
-    _generationCount = 0;
+    GenerationCount = 0;
     _cars.ToList().ForEach(car => car.Reset(_track.Start, _track.Direction));
     StartGeneration();
   }
@@ -66,11 +66,11 @@ public sealed class EvolutionManager
   // Starts a whole new generation
   private void StartGeneration()
   {
-    _generationCount++; // Increment the generation count
-    if (_generationCount > MaxGenerations)
+    if (GenerationCount >= MaxGenerations)
     {
       return;
     }
+    GenerationCount++; // Increment the generation count
 
     _carNets.Clear();
     for (var i = 0; i < _cars.Count; i++)

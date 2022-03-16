@@ -27,7 +27,6 @@ public partial class Index
   private string _image64 { get; set; }
   private ElementReference _trackImgRef { get; set; }
 
-  private int _count;
   private bool _run;
   private string _debug { get; set; }
 
@@ -77,16 +76,9 @@ public partial class Index
 
     await ctx.SetFontAsync("48px solid");
     await ctx.SetFillStyleAsync("white");
-    await ctx.FillTextAsync(_count.ToString(), 700, 750);
+    await ctx.FillTextAsync(_evMgr.GenerationCount.ToString(), 700, 750);
 
     _evMgr.Update();
-    _count++;
-    var car = _cars.SingleOrDefault().Car;
-    if (car?.Position.X > _track.Track.MapWidth ||
-        car?.Position.Y > _track.Track.MapHeight)
-    {
-      OnResetClick();
-    }
 
     var cars = _cars.Select(d => d.Draw(ctx));
     await Task.WhenAll(cars);
@@ -102,7 +94,6 @@ public partial class Index
   private void OnResetClick()
   {
     _run = false;
-    _count = 0;
 
     _evMgr.Reset();
   }
