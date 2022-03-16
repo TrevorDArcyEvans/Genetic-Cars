@@ -41,6 +41,7 @@
       this._canvas.AutoScrollMargin = new System.Drawing.Size(15, 15);
       this._canvas.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
       this._canvas.Location = new System.Drawing.Point(19, 16);
+      this._canvas.Margin = new System.Windows.Forms.Padding(0);
       this._canvas.Name = "_canvas";
       this._canvas.Size = new System.Drawing.Size(800, 800);
       this._canvas.TabIndex = 0;
@@ -67,21 +68,25 @@
       // 
       // Tracks
       // 
+      this.Tracks.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.Tracks.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.Tracks.FormattingEnabled = true;
       this.Tracks.Location = new System.Drawing.Point(825, 74);
       this.Tracks.Name = "Tracks";
-      this.Tracks.Size = new System.Drawing.Size(205, 23);
+      this.Tracks.Size = new System.Drawing.Size(390, 23);
       this.Tracks.TabIndex = 3;
       this.Tracks.SelectedIndexChanged += new System.EventHandler(this.Tracks_SelectedIndexChanged);
       // 
       // DebugLog
       // 
+      this.DebugLog.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.DebugLog.Location = new System.Drawing.Point(825, 103);
       this.DebugLog.Multiline = true;
       this.DebugLog.Name = "DebugLog";
       this.DebugLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.DebugLog.Size = new System.Drawing.Size(205, 713);
+      this.DebugLog.Size = new System.Drawing.Size(390, 713);
       this.DebugLog.TabIndex = 4;
       // 
       // MainForm
@@ -90,7 +95,7 @@
       this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.CancelButton = this.CmdReset;
-      this.ClientSize = new System.Drawing.Size(1042, 833);
+      this.ClientSize = new System.Drawing.Size(1227, 833);
       this.Controls.Add(this.DebugLog);
       this.Controls.Add(this.Tracks);
       this.Controls.Add(this.CmdReset);
