@@ -51,7 +51,8 @@ public partial class MainForm : Form
     var trackPath = Path.Combine(GetTracksDir(), trackName);
     var trackImg = Image.Load<Rgba32>(trackPath);
     var track = new Track(trackImg);
-    _track = new TrackDrawer(track);
+    _track = new TrackDrawer(track, new Bitmap(trackPath));
+
     DebugLog.Text += $"Track changed:  {trackName}" + Environment.NewLine;
     DebugLog.Text += $"Start:   [{track.Start.X}, {track.Start.Y}]" + Environment.NewLine;
     DebugLog.Text += $"ChkPts:  [{track.Checkpoints.Count()}]" + Environment.NewLine;
