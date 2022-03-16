@@ -32,8 +32,8 @@
       // 
       // Canvas
       // 
-      this.AutoScroll = true;
-      this.AutoScrollMargin = new System.Drawing.Size(15, 15);
+      this.Margin = new System.Windows.Forms.Padding(0);
+      this.Name = "Canvas";
       this.ResumeLayout(false);
 
     }
