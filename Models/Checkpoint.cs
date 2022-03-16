@@ -4,14 +4,13 @@ using System.Drawing;
 
 public sealed class Checkpoint
 {
-  public const int Width = 10;
-  public const int Height = 10;
+  public const int Width = 5;
+  public const int Height = 5;
 
-  public Point Position => _position;
-  private Point _position;
+  public Point Position { get; }
 
   public Checkpoint(Point initialPos)
   {
-    _position = new Point(initialPos.X, initialPos.Y);
+    Position = new Point(initialPos.X, initialPos.Y);
   }
 }
