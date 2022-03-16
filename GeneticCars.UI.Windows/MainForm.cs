@@ -10,7 +10,6 @@ using Image = SixLabors.ImageSharp.Image;
 public partial class MainForm : Form
 {
   private int _count;
-  private bool _run;
   private readonly List<CarDrawer> _cars = new();
   private TrackDrawer _track;
   private EvolutionManager _evMgr;
@@ -26,12 +25,12 @@ public partial class MainForm : Form
 
   private void CmdStart_Click(object sender, EventArgs e)
   {
-    _run = !_run;
+    _timer.Enabled = !_timer.Enabled;
   }
 
   private void CmdReset_Click(object sender, EventArgs e)
   {
-    _run = false;
+    _timer.Enabled= false;
     _count = 0;
 
     _evMgr.Reset();
@@ -74,6 +73,12 @@ public partial class MainForm : Form
     drawables.AddRange(_cars);
     _canvas.SetDrawables(drawables);
 
+    _canvas.Invalidate();
+  }
+
+  private void Timer_Tick(object sender, EventArgs e)
+  {
+    _evMgr.Update();
     _canvas.Invalidate();
   }
 }

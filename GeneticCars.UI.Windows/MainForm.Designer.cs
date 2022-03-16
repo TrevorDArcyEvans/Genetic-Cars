@@ -28,11 +28,13 @@
     /// </summary>
     private void InitializeComponent()
     {
+      this.components = new System.ComponentModel.Container();
       this._canvas = new GeneticCars.UI.Windows.Canvas();
       this.CmdStart = new System.Windows.Forms.Button();
       this.CmdReset = new System.Windows.Forms.Button();
       this.Tracks = new System.Windows.Forms.ComboBox();
       this.DebugLog = new System.Windows.Forms.TextBox();
+      this._timer = new System.Windows.Forms.Timer(this.components);
       this.SuspendLayout();
       // 
       // _canvas
@@ -89,6 +91,10 @@
       this.DebugLog.Size = new System.Drawing.Size(390, 713);
       this.DebugLog.TabIndex = 4;
       // 
+      // _timer
+      // 
+      this._timer.Tick += new System.EventHandler(this.Timer_Tick);
+      // 
       // MainForm
       // 
       this.AcceptButton = this.CmdStart;
@@ -118,5 +124,6 @@
     private Button CmdReset;
     private ComboBox Tracks;
     private TextBox DebugLog;
+    private System.Windows.Forms.Timer _timer;
   }
 }
