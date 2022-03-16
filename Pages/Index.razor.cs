@@ -49,13 +49,6 @@ public partial class Index
     };
     await OnTrackChangedAsync(trackChangeEvt);
 
-    var car1 = new Car(_track.Track.Start, _track.Track.Direction);
-    var carDraw1 = new CarDrawer(car1);
-    _cars.Add(carDraw1);
-
-    var cars = _cars.Select(car => car.Car).ToList().AsReadOnly();
-    _evMgr = new(_track.Track, cars);
-
     OnResetClick();
 
     await base.OnInitializedAsync();
@@ -88,7 +81,6 @@ public partial class Index
     await ctx.SetFillStyleAsync("white");
     await ctx.FillTextAsync(_count.ToString(), 700, 750);
 
-    // TODO   move to EvolutionManager.Update()
     _evMgr.Update();
     _count++;
     var car = _cars.SingleOrDefault().Car;
@@ -114,7 +106,7 @@ public partial class Index
     _run = false;
     _count = 0;
 
-    _cars.ForEach(car => car.Car.Reset(_track.Track.Start, _track.Track.Direction));
+    _evMgr.Reset();
   }
 
   private async Task OnTrackChangedAsync(ChangeEventArgs e)
@@ -131,5 +123,13 @@ public partial class Index
     using var outStream = new MemoryStream();
     trackImg.SaveAsPng(outStream);
     _image64 = "data:image/png;base64," + Convert.ToBase64String(outStream.ToArray());
+
+    _cars.Clear();
+    var car1 = new Car(_track.Track.Start, _track.Track.Direction);
+    var carDraw1 = new CarDrawer(car1);
+    _cars.Add(carDraw1);
+
+    var cars = _cars.Select(car => car.Car).ToList().AsReadOnly();
+    _evMgr = new(_track.Track, cars);
   }
 }

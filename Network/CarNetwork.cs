@@ -52,10 +52,10 @@ public sealed class CarNetwork
 
     // Moves the car
     //Move(linear, angular);
-    Move(1, 1);
+    Move(1, 0);
     
     TestCheckpointHit();
-    //TestOffTrack();
+    TestOffTrack();
   }
 
   // Casts all the rays, puts them through the NeuralNetwork and outputs the Move Axis
@@ -122,7 +122,7 @@ public sealed class CarNetwork
     // Move underlying car
     _car.Heading += angular;
     var deltaX = linear * Math.Sin(_car.Heading.ToRadians()) * 4;
-    var deltaY = linear * Math.Cos(_car.Heading.ToRadians()) * 4;
+    var deltaY = -linear * Math.Cos(_car.Heading.ToRadians()) * 4;
     _car.Move((int)(deltaX), (int)(deltaY));
   }
 

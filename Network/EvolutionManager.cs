@@ -48,6 +48,13 @@ public sealed class EvolutionManager
     _carNets.ForEach(car => car.Update());
   }
   
+  public void Reset()
+  {
+    _generationCount = 0;
+    _cars.ToList().ForEach(car => car.Reset(_track.Start, _track.Direction));
+    StartGeneration();
+  }
+
   // Starts a whole new generation
   private void StartGeneration()
   {
@@ -57,6 +64,7 @@ public sealed class EvolutionManager
       return;
     }
 
+    _carNets.Clear();
     for (var i = 0; i < _cars.Count; i++)
     {
       if (i == 0)
@@ -100,6 +108,6 @@ public sealed class EvolutionManager
       return;
     }
 
-    StartGeneration(); // Create a new generation
+    //StartGeneration(); // Create a new generation
   }
 }
