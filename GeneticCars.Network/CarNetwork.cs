@@ -37,6 +37,7 @@ public sealed class CarNetwork
     NextNetwork = new NeuralNetwork(NextNetwork.Topology, null); 
 
     #if false
+    // NOTE:  not supported on webassembly
     // Start checking if the score stayed the same for a lot of time
     new Thread(() => 
     {
