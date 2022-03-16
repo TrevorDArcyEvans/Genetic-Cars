@@ -78,14 +78,19 @@ public sealed class CarNetwork
     // assumes 6 neurons in input layer
     var neuralInput = new double[NextNetwork.Topology[0]];
 
-    // TODO   forward   neuralInput[0] = DistanceToTrackEdge(transform.forward, -Vector2.UnitX) / 4;  
-    // TODO   back   neuralInput[1] = DistanceToTrackEdge(-transform.forward, -Vector3.forward) / 4;  
-    // TODO   left   neuralInput[2] = DistanceToTrackEdge(transform.right, Vector3.right) / 4;  
-    // TODO   right    neuralInput[3] = DistanceToTrackEdge(-transform.right, -Vector3.right) / 4;  
+    var Forward = -Vector2.UnitY;
+    var Back = Vector2.UnitY;
+    var Left = -Vector2.UnitX;
+    var Right = Vector2.UnitX;
+    var FwdLeft = Vector2.Normalize(new (-1, -1));
+    var FwdRight = Vector2.Normalize(new (1, -1));
 
-    const double SqrtHalf = 0.707;
-    // TODO   forward-left   neuralInput[4] = DistanceToTrackEdge(transform.right * SqrtHalf + transform.forward * SqrtHalf, Vector3.right * SqrtHalf + Vector3.forward * SqrtHalf) / 4;  
-    // TODO   forward-right   neuralInput[5] = DistanceToTrackEdge(transform.right * SqrtHalf + -transform.forward * SqrtHalf, Vector3.right * SqrtHalf + -Vector3.forward * SqrtHalf) / 4; 
+    neuralInput[0] = DistanceToTrackEdge(_car, Forward, _track) / 4;  
+    neuralInput[1] = DistanceToTrackEdge(_car, Back, _track) / 4;  
+    neuralInput[2] = DistanceToTrackEdge(_car, Left, _track) / 4;  
+    neuralInput[3] = DistanceToTrackEdge(_car, Right, _track) / 4;  
+    neuralInput[4] = DistanceToTrackEdge(_car, FwdLeft, _track) / 4;  
+    neuralInput[5] = DistanceToTrackEdge(_car, FwdRight, _track) / 4; 
 
     // Feed through the network
     // assumes 2 neurons in output layer
@@ -117,9 +122,26 @@ public sealed class CarNetwork
   }
 
   // Measures distance from car to edge of track
-  private double DistanceToTrackEdge(Point car, Vector2 rayDirection)
+  private static double DistanceToTrackEdge(Car car, Vector2 lidar, Track track)
   {
-    // TODO   DistanceToTrackEdge
+    var rot = Matrix3x2.CreateRotation((float)track.Direction.ToRadians());
+    var rotLidar = Vector2.Transform(lidar, rot);
+    var carPos = new Vector2(car.Position.X, car.Position.Y);
+    for (int i = 1; i <= Car.LidarSenseDist; i++)
+    {
+      var endPt = carPos + i * rotLidar;
+      var dist = Vector2.Distance(carPos, endPt);
+      if (dist > Car.LidarSenseDist)
+      {
+        break;
+      }
+
+      if (!track.IsTrack((int)endPt.X, (int)endPt.Y))
+      {
+        return dist;
+      }
+    }
+
     // Return the maximum distance
     return Car.LidarSenseDist;
   }
