@@ -9,7 +9,6 @@
 namespace GeneticCars.Network;
 
 using Models;
-using System.Drawing;
 using System.Numerics;
 
 public sealed class CarNetwork
