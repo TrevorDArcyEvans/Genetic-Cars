@@ -18,7 +18,7 @@ public sealed partial class Canvas : UserControl
 
   protected override void OnPaint(PaintEventArgs e)
   {
-    _drawables.ForEach(drawable => drawable.Draw(e.Graphics));
+    _drawables?.ForEach(drawable => drawable.Draw(e.Graphics));
     base.OnPaint(e);
   }
 }
