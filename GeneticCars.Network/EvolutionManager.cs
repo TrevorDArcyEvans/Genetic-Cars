@@ -23,6 +23,7 @@ public sealed class EvolutionManager
 
   // This list of cars currently alive
   private readonly List<CarNetwork> _carNets = new();
+  private readonly List<CarNetwork> _carNetsPendingRemoval = new();
   private readonly ReadOnlyCollection<Car> _cars;
 
   // The best NeuralNetwork currently available
@@ -46,6 +47,8 @@ public sealed class EvolutionManager
   public void Update()
   {
     _carNets.ForEach(car => car.Update());
+    _carNetsPendingRemoval.ForEach(car => _carNets.Remove(car));
+    _carNetsPendingRemoval.Clear();
   }
   
   public void Reset()
@@ -95,7 +98,7 @@ public sealed class EvolutionManager
   // Gets called by cars when they die
   public void CarDead(CarNetwork deadCar)
   {
-    _carNets.Remove(deadCar); // Remove the car from the list
+    _carNetsPendingRemoval.Add(deadCar); // add the car to pending removals
 
     if (deadCar.Fitness > _bestFitness) // If it is better that the current best car
     {
