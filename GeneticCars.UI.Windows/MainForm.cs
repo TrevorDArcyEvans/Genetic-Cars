@@ -30,7 +30,12 @@ public partial class MainForm : Form
 
   private void CmdReset_Click(object sender, EventArgs e)
   {
-    _timer.Enabled= false;
+    Reset();
+  }
+
+  private void Reset()
+  {
+    _timer.Enabled = false;
     _count = 0;
 
     _evMgr.Reset();
@@ -74,6 +79,8 @@ public partial class MainForm : Form
     _canvas.SetDrawables(drawables);
 
     _canvas.Invalidate();
+
+    Reset();
   }
 
   private void Timer_Tick(object sender, EventArgs e)
