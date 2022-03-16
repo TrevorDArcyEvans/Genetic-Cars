@@ -15,4 +15,9 @@ public sealed class Checkpoint
   {
     Position = new Point(initialPos.X, initialPos.Y);
   }
+
+  public override string ToString()
+  {
+    return $"[{Position.X},{Position.Y}]";
+  }
 }

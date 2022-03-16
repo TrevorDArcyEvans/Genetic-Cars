@@ -141,21 +141,16 @@ public sealed class CarNetwork
   // This function is when the car hits any checkpoints
   private void TestCheckpointHit()
   {
-    string GetKey(int x, int y)
-    {
-      return $"[{x},{y}]";
-    }
-
     var carVec = new Vector2(_car.Position.X, _car.Position.Y);
     if (_track.Checkpoints
-        .Where(cp => !_foundCheckPts.Contains(GetKey(cp.Position.X, cp.Position.Y)) )
+        .Where(cp => !_foundCheckPts.Contains(cp.ToString()) )
         .Any(cp =>
     {
       var cpVec = new Vector2(cp.Position.X, cp.Position.Y);
       var distSq = Vector2.DistanceSquared(carVec, cpVec);
       if (distSq < Checkpoint.RadiusSquared)
       {
-        _foundCheckPts.Add(GetKey(cp.Position.X, cp.Position.Y));
+        _foundCheckPts.Add(cp.ToString());
         return true;
       }
 

@@ -135,7 +135,7 @@ public sealed class Track
     // key = [px.X,px.Y]
     var consideredPts = new HashSet<string>();
     
-    var chkPts = new List<Point>();
+    var chkPts = new List<Checkpoint>();
     img.ProcessPixelRows(acc =>
     {
       for (var y = 0; y < acc.Height; y++)
@@ -152,7 +152,7 @@ public sealed class Track
           {
             // if we get to here, we have found the top left hand corner of a checkpoint,
             // so we add the centre of the 5x5 square
-            chkPts.Add(new(x + 2, y + 2));
+            chkPts.Add(new(new(x + 2, y + 2)));
 
             // then add all the 25 pixels in the checkpoint so we do not check them again
             for (var i = 0; i < 5; i++)
@@ -172,7 +172,6 @@ public sealed class Track
       }
     });
 
-    var retval = chkPts.Select(pt => new Checkpoint(new(pt.X, pt.Y)));
-    return retval;
+    return chkPts;
   }
 }
