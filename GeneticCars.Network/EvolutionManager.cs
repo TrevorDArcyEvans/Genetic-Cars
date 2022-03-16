@@ -16,7 +16,7 @@ public sealed class EvolutionManager
   // Should we use node mutation?
   private const bool UseNodeMutation = true;
 
-  private const int MaxGenerations = 10;
+  public const int MaxGenerations = 10;
 
   // The current generation number
   public int GenerationCount { get; private set; }

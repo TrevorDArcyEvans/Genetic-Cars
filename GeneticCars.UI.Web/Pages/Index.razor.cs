@@ -74,9 +74,9 @@ public partial class Index
 
     await _track.Draw(ctx);
 
-    await ctx.SetFontAsync("48px solid");
+    await ctx.SetFontAsync("24px solid");
     await ctx.SetFillStyleAsync("white");
-    await ctx.FillTextAsync(_evMgr.GenerationCount.ToString(), 700, 750);
+    await ctx.FillTextAsync($"{_evMgr.GenerationCount} / {EvolutionManager.MaxGenerations}", 700, 750);
 
     _evMgr.Update();
 
