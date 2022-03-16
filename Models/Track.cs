@@ -11,7 +11,7 @@ public sealed class Track
   
   // Checkpoint is a 5x5 square of red pixels
   // This point is centre of the 5x5 square
-  public IEnumerable<System.Drawing.Point> Checkpoints { get; }
+  public IEnumerable<Checkpoint> Checkpoints { get; }
 
   public int Width => _data.GetLength(0);
   public int Height => _data.GetLength(1);
@@ -130,7 +130,7 @@ public sealed class Track
     return retval;
   }
 
-  private static IEnumerable<System.Drawing.Point> GetCheckpoints(Image<Rgba32> img)
+  private static IEnumerable<Checkpoint> GetCheckpoints(Image<Rgba32> img)
   {
     string GetKey(int x, int y)
     {
@@ -178,7 +178,7 @@ public sealed class Track
       }
     });
 
-    var retval = chkPts.Select(pt => new System.Drawing.Point(pt.X, pt.Y));
+    var retval = chkPts.Select(pt => new Checkpoint(new(pt.X, pt.Y)));
     return retval;
   }
 }

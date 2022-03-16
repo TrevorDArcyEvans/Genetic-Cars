@@ -132,7 +132,7 @@ public sealed class CarNetwork
     var carVec = new Vector2(_car.Position.X, _car.Position.Y);
     if (_track.Checkpoints.Any(cp => 
     {
-      var cpVec = new Vector2(cp.X, cp.Y);
+      var cpVec = new Vector2(cp.Position.X, cp.Position.Y);
       var distSq = Vector2.DistanceSquared(carVec, cpVec);
       return distSq < 9;
     }))
