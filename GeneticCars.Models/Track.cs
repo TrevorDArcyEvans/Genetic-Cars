@@ -61,30 +61,24 @@ public sealed class Track
       }
     });
 
-    // gray level cutoff between black and white
-    int levelStart;
-    int levelEnd;
-    for (levelStart = 0; levelStart < 256 && grayLevel[levelStart] == 0; levelStart++)
-    {
-      // DO_NOTHING
-    }
-
-    for (levelEnd = 255; levelEnd >= levelStart && grayLevel[levelEnd] == 0; levelEnd--)
-    {
-      // DO_NOTHING
-    }
-
-    levelEnd++;
-
-    var cutoffLevel = (levelStart + levelEnd) / 2;
-
     // create boolean image white = true, black = false
     var blackWhiteImage = new bool[img.Width, img.Height];
     for (var row = 0; row < img.Height; row++)
     {
       for (var col = 0; col < img.Width; col++)
       {
-        blackWhiteImage[row, col] = grayImage[row, col] > cutoffLevel;
+        // Only colours we expect in track are:
+        //  track         white     RGB(255, 255, 255)    gray(100)
+        //  off track     black     RGB(0, 0, 0)          gray(0)
+        //  direction     reddish   RGB(120, 120, 120)    gray(120)
+        //  start         green     RGB(0, 255, 0)        gray(150)
+        //  checkpoint    red       RGB(255, 0, 0)        gray(76)
+        // so we set the threshold to be just below a checkpoint
+        //
+        // NOTE:  direction pixel will probably be detected as off track
+        //        but car will have to go across many off track areas
+        //        to get there
+        blackWhiteImage[row, col] = grayImage[row, col] > 70;
       }
     }
 
