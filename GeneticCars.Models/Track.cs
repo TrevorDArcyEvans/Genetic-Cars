@@ -70,12 +70,12 @@ public sealed class Track
         // Only colours we expect in track are:
         //  track         white     RGB(255, 255, 255)    gray(100)
         //  off track     black     RGB(0, 0, 0)          gray(0)
-        //  direction     reddish   RGB(120, 120, 120)    gray(120)
+        //  direction     reddish   RGB(120, 120, 120)    gray(0-120 max)
         //  start         green     RGB(0, 255, 0)        gray(150)
         //  checkpoint    red       RGB(255, 0, 0)        gray(76)
         // so we set the threshold to be just below a checkpoint
         //
-        // NOTE:  direction pixel will probably be detected as off track
+        // NOTE:  direction pixel may be detected as off track
         //        but car will have to go across many off track areas
         //        to get there
         blackWhiteImage[row, col] = grayImage[row, col] > 70;
