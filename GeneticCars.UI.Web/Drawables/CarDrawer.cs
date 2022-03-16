@@ -1,6 +1,7 @@
-namespace GeneticCars.Models;
+namespace GeneticCars.Drawables;
 
 using Blazor.Extensions.Canvas.Canvas2D;
+using Models;
 
 public sealed class CarDrawer : IDrawable
 {

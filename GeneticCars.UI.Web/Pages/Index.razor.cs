@@ -2,10 +2,11 @@
 
 using Blazor.Extensions;
 using Blazor.Extensions.Canvas.Canvas2D;
-using GeneticCars.Network;
+using Drawables;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using Models;
+using Network;
 using Newtonsoft.Json;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
