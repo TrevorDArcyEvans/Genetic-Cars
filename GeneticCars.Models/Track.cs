@@ -13,8 +13,8 @@ public sealed class Track
   // This point is centre of the 5x5 square
   public IEnumerable<Checkpoint> Checkpoints { get; }
 
-  public int Width => _data.GetLength(0);
-  public int Height => _data.GetLength(1);
+  public int MapWidth => _data.GetLength(0);
+  public int MapHeight => _data.GetLength(1);
   public double Direction { get; } // degrees
 
   // width x height

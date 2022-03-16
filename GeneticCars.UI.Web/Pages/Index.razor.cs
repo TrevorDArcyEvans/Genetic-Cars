@@ -13,9 +13,6 @@ using SixLabors.ImageSharp.PixelFormats;
 
 public partial class Index
 {
-  private const int CanvasWidth = 800;
-  private const int CanvasHeight = 800;
-
   [Inject]
   private IJSRuntime JsRuntime { get; set; }
 
@@ -72,9 +69,9 @@ public partial class Index
 
     await ctx.BeginBatchAsync();
 
-    await ctx.ClearRectAsync(0, 0, CanvasWidth, CanvasHeight);
+    await ctx.ClearRectAsync(0, 0, _track.Track.MapWidth, _track.Track.MapHeight);
     await ctx.SetFillStyleAsync("white");
-    await ctx.FillRectAsync(0, 0, CanvasWidth, CanvasHeight);
+    await ctx.FillRectAsync(0, 0, _track.Track.MapWidth, _track.Track.MapHeight);
 
     await _track.Draw(ctx);
 
@@ -85,8 +82,8 @@ public partial class Index
     _evMgr.Update();
     _count++;
     var car = _cars.SingleOrDefault().Car;
-    if (car?.Position.X > CanvasWidth ||
-        car?.Position.Y > CanvasHeight)
+    if (car?.Position.X > _track.Track.MapWidth ||
+        car?.Position.Y > _track.Track.MapHeight)
     {
       OnResetClick();
     }
