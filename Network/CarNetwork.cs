@@ -134,7 +134,7 @@ public sealed class CarNetwork
     {
       var cpVec = new Vector2(cp.Position.X, cp.Position.Y);
       var distSq = Vector2.DistanceSquared(carVec, cpVec);
-      return distSq < 9;
+      return distSq < Checkpoint.RadiusSquared;
     }))
     {
       // Increase Fitness/Score
