@@ -148,13 +148,14 @@ public sealed class CarNetwork
     {
       var cpVec = new Vector2(cp.Position.X, cp.Position.Y);
       var distSq = Vector2.DistanceSquared(carVec, cpVec);
-      if (distSq < Checkpoint.RadiusSquared)
+      if (!(distSq < Checkpoint.RadiusSquared))
       {
-        _foundCheckPts.Add(cp.ToString());
-        return true;
+        return false;
       }
 
-      return false;
+      _foundCheckPts.Add(cp.ToString());
+      return true;
+
     }))
     {
       // Increase Fitness/Score
@@ -181,12 +182,14 @@ public sealed class CarNetwork
 
       // wait for some time
       Thread.Sleep(TimeSpan.FromSeconds(2));
-      if (oldFitness == Fitness) // Check if the fitness didn't change yet
+      if (oldFitness != Fitness)
       {
-        _evMgr.CarDead(this); // Tell the Evolution Manager that the car is dead
-        _improvementThread = null;
-        break;
+        continue;
       }
+
+      _evMgr.CarDead(this); // Tell the Evolution Manager that the car is dead
+      _improvementThread = null;
+      break;
     }
   }
 }
