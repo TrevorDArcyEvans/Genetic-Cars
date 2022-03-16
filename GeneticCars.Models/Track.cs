@@ -8,7 +8,7 @@ public sealed class Track
   // Start point is a 5x5 square of green pixels
   // This point is centre of the 5x5 square
   public System.Drawing.Point Start { get; }
-  
+
   // Checkpoint is a 5x5 square of red pixels
   // This point is centre of the 5x5 square
   public IEnumerable<Checkpoint> Checkpoints { get; }
@@ -134,7 +134,7 @@ public sealed class Track
     // points we have already checked
     // key = [px.X,px.Y]
     var consideredPts = new HashSet<string>();
-    
+
     var chkPts = new List<Checkpoint>();
     img.ProcessPixelRows(acc =>
     {
