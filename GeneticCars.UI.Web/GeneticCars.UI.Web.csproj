@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GeneticCars.Models\GeneticCars.Models.csproj" />
+    <ProjectReference Include="..\GeneticCars.Network\GeneticCars.Network.csproj" />
   </ItemGroup>
 
 </Project>

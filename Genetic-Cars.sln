@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeneticCars.UI.Web", "Genet
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeneticCars.Models", "GeneticCars.Models\GeneticCars.Models.csproj", "{666DC62B-DA4C-4C2E-B270-6C90F97F977C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeneticCars.Network", "GeneticCars.Network\GeneticCars.Network.csproj", "{57F612CA-3091-4AAC-80AC-1F8F9502FD33}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{666DC62B-DA4C-4C2E-B270-6C90F97F977C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{666DC62B-DA4C-4C2E-B270-6C90F97F977C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{666DC62B-DA4C-4C2E-B270-6C90F97F977C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57F612CA-3091-4AAC-80AC-1F8F9502FD33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57F612CA-3091-4AAC-80AC-1F8F9502FD33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57F612CA-3091-4AAC-80AC-1F8F9502FD33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57F612CA-3091-4AAC-80AC-1F8F9502FD33}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
