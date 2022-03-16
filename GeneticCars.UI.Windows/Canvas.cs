@@ -2,6 +2,8 @@
 
 public sealed partial class Canvas : UserControl
 {
+  private List<IDrawable> _drawables;
+
   public Canvas()
   {
     InitializeComponent();
@@ -9,13 +11,14 @@ public sealed partial class Canvas : UserControl
     DoubleBuffered = true;
   }
 
-  private void Draw(Graphics g)
+  public void SetDrawables(List<IDrawable> drawables)
   {
+    _drawables = drawables;
   }
 
   protected override void OnPaint(PaintEventArgs e)
   {
-    Draw(e.Graphics);
+    _drawables.ForEach(drawable => drawable.Draw(e.Graphics));
     base.OnPaint(e);
   }
 }

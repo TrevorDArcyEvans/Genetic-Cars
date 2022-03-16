@@ -53,6 +53,7 @@
       this.CmdStart.TabIndex = 1;
       this.CmdStart.Text = "Start";
       this.CmdStart.UseVisualStyleBackColor = true;
+      this.CmdStart.Click += new System.EventHandler(this.CmdStart_Click);
       // 
       // CmdReset
       // 
@@ -62,28 +63,34 @@
       this.CmdReset.TabIndex = 2;
       this.CmdReset.Text = "Reset";
       this.CmdReset.UseVisualStyleBackColor = true;
+      this.CmdReset.Click += new System.EventHandler(this.CmdReset_Click);
       // 
       // Tracks
       // 
+      this.Tracks.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.Tracks.FormattingEnabled = true;
       this.Tracks.Location = new System.Drawing.Point(825, 74);
       this.Tracks.Name = "Tracks";
       this.Tracks.Size = new System.Drawing.Size(205, 23);
       this.Tracks.TabIndex = 3;
+      this.Tracks.SelectedIndexChanged += new System.EventHandler(this.Tracks_SelectedIndexChanged);
       // 
       // DebugLog
       // 
       this.DebugLog.Location = new System.Drawing.Point(825, 103);
       this.DebugLog.Multiline = true;
       this.DebugLog.Name = "DebugLog";
+      this.DebugLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
       this.DebugLog.Size = new System.Drawing.Size(205, 713);
       this.DebugLog.TabIndex = 4;
       // 
       // MainForm
       // 
+      this.AcceptButton = this.CmdStart;
       this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(1042, 836);
+      this.CancelButton = this.CmdReset;
+      this.ClientSize = new System.Drawing.Size(1042, 833);
       this.Controls.Add(this.DebugLog);
       this.Controls.Add(this.Tracks);
       this.Controls.Add(this.CmdReset);
@@ -94,7 +101,6 @@
       this.Name = "MainForm";
       this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
       this.Text = "Genetic Cars";
-      this.Load += new System.EventHandler(this.MainForm_Load);
       this.ResumeLayout(false);
       this.PerformLayout();
 
