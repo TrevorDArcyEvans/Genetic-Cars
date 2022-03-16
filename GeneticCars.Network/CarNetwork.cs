@@ -26,25 +26,23 @@ public sealed class CarNetwork
   private readonly Car _car;
   private readonly Track _track;
 
+  private Thread _improvementThread;
+
   public CarNetwork(EvolutionManager evMgr, Car car, Track track)
   {
-    (_evMgr, _car, _track)  = (evMgr, car, track);
+    (_evMgr, _car, _track) = (evMgr, car, track);
 
     // Sets the current network to the Next Network
     Network = NextNetwork;
 
     // Make sure the Next Network is reassigned to avoid having another car use the same network
-    NextNetwork = new NeuralNetwork(NextNetwork.Topology, null); 
+    NextNetwork = new NeuralNetwork(NextNetwork.Topology, null);
 
-    #if false
-    // NOTE:  not supported on webassembly
-    // Start checking if the score stayed the same for a lot of time
-    new Thread(() => 
+    _improvementThread = new Thread(() =>
     {
-      Thread.CurrentThread.IsBackground = true; 
+      Thread.CurrentThread.IsBackground = true;
       IsNotImproving();
-    }).Start();
-    #endif
+    });
   }
 
   public void Update()
@@ -54,9 +52,18 @@ public sealed class CarNetwork
     // Moves the car
     //Move(linear, angular);
     Move(1, 0);
-    
+
     TestCheckpointHit();
     TestOffTrack();
+
+    if (!OperatingSystem.IsBrowser() &&
+        _improvementThread is not null &&
+        !_improvementThread.IsAlive)
+    {
+      // NOTE:  not supported on webassembly
+      // Start checking if the score stayed the same for a lot of time
+      _improvementThread.Start();
+    }
   }
 
   // Casts all the rays, puts them through the NeuralNetwork and outputs the Move Axis
@@ -131,7 +138,7 @@ public sealed class CarNetwork
   private void TestCheckpointHit()
   {
     var carVec = new Vector2(_car.Position.X, _car.Position.Y);
-    if (_track.Checkpoints.Any(cp => 
+    if (_track.Checkpoints.Any(cp =>
     {
       var cpVec = new Vector2(cp.Position.X, cp.Position.Y);
       var distSq = Vector2.DistanceSquared(carVec, cpVec);
@@ -152,18 +159,22 @@ public sealed class CarNetwork
     }
   }
 
-    // Checks each few seconds if the car didn't make any improvement
-    private void IsNotImproving()
+  // Checks each few seconds if the car didn't make any improvement
+  private void IsNotImproving()
+  {
+    while (true)
     {
-      var oldFitness = Fitness; // Save the initial fitness
-      while (true)
+      // Save the initial fitness
+      var oldFitness = Fitness;
+
+      // wait for some time
+      Thread.Sleep(TimeSpan.FromSeconds(2));
+      if (oldFitness == Fitness) // Check if the fitness didn't change yet
       {
-        // wait for some time
-        Thread.Sleep(TimeSpan.FromMilliseconds(100));
-        if (oldFitness == Fitness) // Check if the fitness didn't change yet
-        {
-          _evMgr.CarDead(this); // Tell the Evolution Manager that the car is dead
-        }
+        _evMgr.CarDead(this); // Tell the Evolution Manager that the car is dead
+        _improvementThread = null;
+        break;
       }
     }
+  }
 }
