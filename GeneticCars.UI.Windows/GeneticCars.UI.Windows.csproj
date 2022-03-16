@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\GeneticCars.UI.Web\wwwroot\tracks\Philip-Island.png" Link="tracks\Philip-Island.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Content Include="..\GeneticCars.UI.Web\wwwroot\tracks\Wanneroo.png" Link="tracks\Wanneroo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GeneticCars.Network\GeneticCars.Network.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="tracks\" />
+  </ItemGroup>
+
+</Project>
