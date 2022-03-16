@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Genetic-Cars", "Genetic-Cars.csproj", "{2495271A-E4A1-4B0C-A6E0-FA635C97CDEE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Genetic-Cars", "GeneticCars.UI.Web/Genetic-Cars.csproj", "{2495271A-E4A1-4B0C-A6E0-FA635C97CDEE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
