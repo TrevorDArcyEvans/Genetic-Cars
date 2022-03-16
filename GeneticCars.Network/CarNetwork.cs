@@ -26,6 +26,10 @@ public sealed class CarNetwork
   private readonly Car _car;
   private readonly Track _track;
 
+  // checkpoints we have already encountered
+  // key = [px.X,px.Y]
+  private readonly HashSet<string> _foundCheckPts = new();
+
   private Thread _improvementThread;
 
   public CarNetwork(EvolutionManager evMgr, Car car, Track track)
@@ -137,12 +141,25 @@ public sealed class CarNetwork
   // This function is when the car hits any checkpoints
   private void TestCheckpointHit()
   {
+    string GetKey(int x, int y)
+    {
+      return $"[{x},{y}]";
+    }
+
     var carVec = new Vector2(_car.Position.X, _car.Position.Y);
-    if (_track.Checkpoints.Any(cp =>
+    if (_track.Checkpoints
+        .Where(cp => !_foundCheckPts.Contains(GetKey(cp.Position.X, cp.Position.Y)) )
+        .Any(cp =>
     {
       var cpVec = new Vector2(cp.Position.X, cp.Position.Y);
       var distSq = Vector2.DistanceSquared(carVec, cpVec);
-      return distSq < Checkpoint.RadiusSquared;
+      if (distSq < Checkpoint.RadiusSquared)
+      {
+        _foundCheckPts.Add(GetKey(cp.Position.X, cp.Position.Y));
+        return true;
+      }
+
+      return false;
     }))
     {
       // Increase Fitness/Score
