@@ -114,9 +114,12 @@ public partial class Index
     _image64 = "data:image/png;base64," + Convert.ToBase64String(outStream.ToArray());
 
     _cars.Clear();
-    var car1 = new Car(_track.Track.Start, _track.Track.Direction);
-    var carDraw1 = new CarDrawer(car1);
-    _cars.Add(carDraw1);
+    foreach (var _ in Enumerable.Range(0, 10))
+    {
+      var car = new Car(_track.Track.Start, _track.Track.Direction);
+      var carDraw = new CarDrawer(car);
+      _cars.Add(carDraw);
+    }
 
     var cars = _cars.Select(car => car.Car).ToList().AsReadOnly();
     _evMgr = new(_track.Track, cars);
