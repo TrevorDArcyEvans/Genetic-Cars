@@ -193,7 +193,8 @@ public sealed class NeuralNetwork
 
         foreach (var weight in _weights)
         {
-          weight[j] = _randomizer.NextDouble() * (mutationAmount * 2) - mutationAmount; // Mutate the weight connecting both nodes
+          // Mutate the weight connecting both nodes
+          weight[j] = _randomizer.NextDouble() * (mutationAmount * 2) - mutationAmount;
         }
       }
     }
