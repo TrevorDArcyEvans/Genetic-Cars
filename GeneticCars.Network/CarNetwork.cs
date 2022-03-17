@@ -17,6 +17,7 @@ public sealed class CarNetwork
 
   // The fitness/score of the current car. Represents the number of checkpoints that his car hit.
   public int Fitness { get; private set; }
+  private int _oldFitness;
 
   // The NeuralNetwork of the current car
   public NeuralNetwork Network { get; }
@@ -29,7 +30,7 @@ public sealed class CarNetwork
   // key = [px.X,px.Y]
   private readonly HashSet<string> _foundCheckPts = new();
 
-  private Thread _improvementThread;
+  private int _updateCount;
 
   public CarNetwork(EvolutionManager evMgr, Car car, Track track)
   {
@@ -40,12 +41,6 @@ public sealed class CarNetwork
 
     // Make sure the Next Network is reassigned to avoid having another car use the same network
     NextNetwork = new NeuralNetwork(NextNetwork.Topology, null);
-
-    _improvementThread = new Thread(() =>
-    {
-      Thread.CurrentThread.IsBackground = true;
-      IsNotImproving();
-    });
   }
 
   public void Update()
@@ -58,13 +53,18 @@ public sealed class CarNetwork
     TestCheckpointHit();
     TestOffTrack();
 
-    if (!OperatingSystem.IsBrowser() &&
-        _improvementThread is not null &&
-        !_improvementThread.IsAlive)
+    _updateCount++;
+
+    // periodically save the initial fitness
+    if (_updateCount % 400 == 0)
     {
-      // NOTE:  not supported on webassembly
+      _oldFitness = Fitness;
+    }
+
+    if (_updateCount % 100 == 0)
+    {
       // Start checking if the score stayed the same for a lot of time
-      _improvementThread.Start();
+      TestIsNotImproving();
     }
   }
 
@@ -80,15 +80,15 @@ public sealed class CarNetwork
     var Back = Vector2.UnitY;
     var Left = -Vector2.UnitX;
     var Right = Vector2.UnitX;
-    var FwdLeft = Vector2.Normalize(new (-1, -1));
-    var FwdRight = Vector2.Normalize(new (1, -1));
+    var FwdLeft = Vector2.Normalize(new(-1, -1));
+    var FwdRight = Vector2.Normalize(new(1, -1));
 
-    neuralInput[0] = DistanceToTrackEdge(_car, Forward, _track) / 4;  
-    neuralInput[1] = DistanceToTrackEdge(_car, Back, _track) / 4;  
-    neuralInput[2] = DistanceToTrackEdge(_car, Left, _track) / 4;  
-    neuralInput[3] = DistanceToTrackEdge(_car, Right, _track) / 4;  
-    neuralInput[4] = DistanceToTrackEdge(_car, FwdLeft, _track) / 4;  
-    neuralInput[5] = DistanceToTrackEdge(_car, FwdRight, _track) / 4; 
+    neuralInput[0] = DistanceToTrackEdge(_car, Forward, _track) / 4;
+    neuralInput[1] = DistanceToTrackEdge(_car, Back, _track) / 4;
+    neuralInput[2] = DistanceToTrackEdge(_car, Left, _track) / 4;
+    neuralInput[3] = DistanceToTrackEdge(_car, Right, _track) / 4;
+    neuralInput[4] = DistanceToTrackEdge(_car, FwdLeft, _track) / 4;
+    neuralInput[5] = DistanceToTrackEdge(_car, FwdRight, _track) / 4;
 
     // Feed through the network
     // assumes 2 neurons in output layer
@@ -163,7 +163,7 @@ public sealed class CarNetwork
   {
     var carVec = new Vector2(_car.Position.X, _car.Position.Y);
     if (_track.Checkpoints
-        .Where(cp => !_foundCheckPts.Contains(cp.ToString()) )
+        .Where(cp => !_foundCheckPts.Contains(cp.ToString()))
         .Any(cp =>
     {
       var cpVec = new Vector2(cp.Position.X, cp.Position.Y);
@@ -193,23 +193,15 @@ public sealed class CarNetwork
   }
 
   // Checks each few seconds if the car didn't make any improvement
-  private void IsNotImproving()
+  private void TestIsNotImproving()
   {
-    while (true)
+    if (_oldFitness != Fitness)
     {
-      // Save the initial fitness
-      var oldFitness = Fitness;
-
-      // wait for some time
-      Thread.Sleep(TimeSpan.FromSeconds(2));
-      if (oldFitness != Fitness)
-      {
-        continue;
-      }
-
-      _evMgr.CarDead(this); // Tell the Evolution Manager that the car is dead
-      _improvementThread = null;
-      break;
+      return;
     }
+
+    // Tell the Evolution Manager that the car is dead
+    _evMgr.CarDead(this);
   }
 }
+
