@@ -4,7 +4,7 @@ using System.Drawing;
 
 public sealed class Checkpoint
 {
-  public const int Radius = 7;  // ~ sqrt(Width^2 + Height^2)
+  public const int Radius = 10;
   public const int RadiusSquared = Radius * Radius;
 
   public Point Position { get; }
