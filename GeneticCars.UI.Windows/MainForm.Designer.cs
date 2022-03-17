@@ -95,7 +95,7 @@
       // 
       // _timer
       // 
-      this._timer.Interval = 10;
+      this._timer.Interval = 1;
       this._timer.Tick += new System.EventHandler(this.Timer_Tick);
       // 
       // MaxGenerations
