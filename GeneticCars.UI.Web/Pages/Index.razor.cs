@@ -1,10 +1,9 @@
-﻿using GeneticCars.UI.Windows.Drawables;
-
-namespace GeneticCars.Pages;
+﻿namespace GeneticCars.Pages;
 
 using Blazor.Extensions;
 using Blazor.Extensions.Canvas.Canvas2D;
 using Drawables;
+using GeneticCars.UI.Windows.Drawables;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using Models;
@@ -84,7 +83,7 @@ public partial class Index
 
     await _track.Draw(ctx);
 
-    _statusMsg.Text = $"{_evMgr.GenerationCount} / {_evMgr.MaxGenerations}";
+    _statusMsg.Text = $"{_evMgr.GenerationCount} / {_evMgr.MaxGenerations} [{_evMgr.BestFitness}]";
     await _status.Draw(ctx);
 
     _evMgr.Update();

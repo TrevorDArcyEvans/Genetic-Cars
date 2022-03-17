@@ -85,7 +85,7 @@ public partial class MainForm : Form
 
   private void Timer_Tick(object sender, EventArgs e)
   {
-    _statusMsg.Text = $"{_evMgr.GenerationCount} / {_evMgr.MaxGenerations}";
+    _statusMsg.Text = $"{_evMgr.GenerationCount} / {_evMgr.MaxGenerations} [{_evMgr.BestFitness}]";
     _evMgr.Update();
     _canvas.Invalidate();
   }

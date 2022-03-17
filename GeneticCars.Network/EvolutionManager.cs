@@ -30,7 +30,7 @@ public sealed class EvolutionManager
   private NeuralNetwork _bestNeuralNetwork;
 
   // The Fitness of the best NeuralNetwork ever created
-  private int _bestFitness = -1;
+  public int BestFitness { get; private set; } = -1;
 
   private readonly Track _track;
 
@@ -109,12 +109,12 @@ public sealed class EvolutionManager
     // we are iterating over it
     _carNetsPendingRemoval.Add(deadCar); // add the car to pending removals
 
-    if (deadCar.Fitness <= _bestFitness)
+    if (deadCar.Fitness <= BestFitness)
     {
       return;
     }
 
     _bestNeuralNetwork = deadCar.Network; // Make sure it becomes the best car
-    _bestFitness = deadCar.Fitness; // And also set the best fitness
+    BestFitness = deadCar.Fitness; // And also set the best fitness
   }
 }
