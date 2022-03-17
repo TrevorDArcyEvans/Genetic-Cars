@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "GeneticCars.UI.CLI": {
+      "commandName": "Project",
+      "commandLineArgs": "Philip-Island.png 200 20"
+    }
+  }
+}
