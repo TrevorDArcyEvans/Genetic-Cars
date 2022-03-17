@@ -16,7 +16,7 @@ public sealed class EvolutionManager
   // Should we use node mutation?
   private const bool UseNodeMutation = true;
 
-  public const int MaxGenerations = 10;
+  public int MaxGenerations { get; }
 
   // The current generation number
   public int GenerationCount { get; private set; }
@@ -34,9 +34,9 @@ public sealed class EvolutionManager
 
   private readonly Track _track;
 
-  public EvolutionManager(Track track, ReadOnlyCollection<Car> cars)
+  public EvolutionManager(int maxGen, Track track, ReadOnlyCollection<Car> cars)
   {
-    (_track, _cars) = (track, cars);
+    (MaxGenerations, _track, _cars) = (maxGen, track, cars);
 
     // Set the BestNeuralNetwork to a random new network
     _bestNeuralNetwork = new NeuralNetwork(CarNetwork.NextNetwork);

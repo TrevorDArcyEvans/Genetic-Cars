@@ -29,12 +29,16 @@
     private void InitializeComponent()
     {
       this.components = new System.ComponentModel.Container();
+      System.Windows.Forms.Label label1;
       this._canvas = new GeneticCars.UI.Windows.Canvas();
       this.CmdStart = new System.Windows.Forms.Button();
       this.CmdReset = new System.Windows.Forms.Button();
       this.Tracks = new System.Windows.Forms.ComboBox();
       this.DebugLog = new System.Windows.Forms.TextBox();
       this._timer = new System.Windows.Forms.Timer(this.components);
+      this.MaxGenerations = new System.Windows.Forms.NumericUpDown();
+      label1 = new System.Windows.Forms.Label();
+      ((System.ComponentModel.ISupportInitialize)(this.MaxGenerations)).BeginInit();
       this.SuspendLayout();
       // 
       // _canvas
@@ -96,6 +100,37 @@
       this._timer.Interval = 10;
       this._timer.Tick += new System.EventHandler(this.Timer_Tick);
       // 
+      // MaxGenerations
+      // 
+      this.MaxGenerations.Location = new System.Drawing.Point(1095, 22);
+      this.MaxGenerations.Maximum = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
+      this.MaxGenerations.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+      this.MaxGenerations.Name = "MaxGenerations";
+      this.MaxGenerations.Size = new System.Drawing.Size(120, 23);
+      this.MaxGenerations.TabIndex = 5;
+      this.MaxGenerations.Value = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+      // 
+      // label1
+      // 
+      label1.AutoSize = true;
+      label1.Location = new System.Drawing.Point(990, 24);
+      label1.Name = "label1";
+      label1.Size = new System.Drawing.Size(99, 15);
+      label1.TabIndex = 6;
+      label1.Text = "Max Generations:";
+      // 
       // MainForm
       // 
       this.AcceptButton = this.CmdStart;
@@ -103,6 +138,8 @@
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.CancelButton = this.CmdReset;
       this.ClientSize = new System.Drawing.Size(1227, 833);
+      this.Controls.Add(label1);
+      this.Controls.Add(this.MaxGenerations);
       this.Controls.Add(this.DebugLog);
       this.Controls.Add(this.Tracks);
       this.Controls.Add(this.CmdReset);
@@ -113,6 +150,7 @@
       this.Name = "MainForm";
       this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
       this.Text = "Genetic Cars";
+      ((System.ComponentModel.ISupportInitialize)(this.MaxGenerations)).EndInit();
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -126,5 +164,6 @@
     private ComboBox Tracks;
     private TextBox DebugLog;
     private System.Windows.Forms.Timer _timer;
+    private NumericUpDown MaxGenerations;
   }
 }
