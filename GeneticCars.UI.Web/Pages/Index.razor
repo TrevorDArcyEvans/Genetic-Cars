@@ -11,13 +11,12 @@
   <BECanvas Width="800" Height="800" @ref="_canvas"></BECanvas>
 
   <button @onclick="OnStartClick">Start</button>
-  <button @onclick="OnResetClick">Reset</button>
-  <select @onchange="@(async (e) => { await OnTrackChangedAsync(e); OnResetClick(); })" class="form-control">
+  <select @onchange="@(async (e) => { await OnTrackChangedAsync(e); Reset(); })" class="form-control">
     @foreach (var track in _trackList)
     {
       <option value="@track">@track</option>
     }
   </select>
-  <input type="number" @bind="_maxGen"/>
+  <label for="maxGen">Max Generations:</label> <input type="number" @bind="_maxGen" id="maxGen"/>
   <textarea @bind="_debug" style="height: 200px; width: 100%;" />
 </div>

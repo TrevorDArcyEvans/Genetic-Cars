@@ -13,7 +13,7 @@ public partial class MainForm : Form
   private readonly List<CarDrawer> _cars = new();
   private TrackDrawer _track;
   private EvolutionManager _evMgr;
-  private readonly StatusMessage _statusMsg = new ();
+  private readonly StatusMessage _statusMsg = new();
 
   public MainForm()
   {
@@ -26,12 +26,12 @@ public partial class MainForm : Form
 
   private void CmdStart_Click(object sender, EventArgs e)
   {
+    if (!_timer.Enabled)
+    {
+      var cars = _cars.Select(car => car.Car).ToList().AsReadOnly();
+      _evMgr = new((int)MaxGenerations.Value, _track.Track, cars);
+    }
     _timer.Enabled = !_timer.Enabled;
-  }
-
-  private void CmdReset_Click(object sender, EventArgs e)
-  {
-    Reset();
   }
 
   private void Reset()
@@ -39,7 +39,7 @@ public partial class MainForm : Form
     _timer.Enabled = false;
     _count = 0;
 
-    _evMgr.Reset();
+    _evMgr?.Reset();
   }
 
   private static string GetTracksDir()
@@ -69,9 +69,6 @@ public partial class MainForm : Form
       var carDraw = new CarDrawer(car);
       _cars.Add(carDraw);
     }
-
-    var cars = _cars.Select(car => car.Car).ToList().AsReadOnly();
-    _evMgr = new(_track.Track, cars);
 
     var statusMsgDrawer = new StatusMessageDrawer(_statusMsg);
 

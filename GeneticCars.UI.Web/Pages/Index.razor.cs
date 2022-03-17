@@ -37,12 +37,12 @@ public partial class Index
 
   private EvolutionManager _evMgr;
   private int _maxGen { get; set; } = 20;
-  private readonly StatusMessage _statusMsg = new ();
+  private readonly StatusMessage _statusMsg = new();
   private readonly StatusMessageDrawer _status;
 
   public Index()
   {
-    _status = new (_statusMsg);
+    _status = new(_statusMsg);
   }
 
   protected override async Task OnInitializedAsync()
@@ -56,7 +56,7 @@ public partial class Index
     };
     await OnTrackChangedAsync(trackChangeEvt);
 
-    OnResetClick();
+    Reset();
 
     await base.OnInitializedAsync();
   }
@@ -97,14 +97,17 @@ public partial class Index
 
   private void OnStartClick()
   {
+    if (!_run)
+    {
+      var cars = _cars.Select(car => car.Car).ToList().AsReadOnly();
+      _evMgr = new(_maxGen, _track.Track, cars);
+    }
     _run = !_run;
   }
 
-  private void OnResetClick()
+  private void Reset()
   {
-    _run = false;
-
-    _evMgr.Reset();
+    _evMgr?.Reset();
   }
 
   private async Task OnTrackChangedAsync(ChangeEventArgs e)
@@ -129,8 +132,5 @@ public partial class Index
       var carDraw = new CarDrawer(car);
       _cars.Add(carDraw);
     }
-
-    var cars = _cars.Select(car => car.Car).ToList().AsReadOnly();
-    _evMgr = new(_maxGen, _track.Track, cars);
   }
 }

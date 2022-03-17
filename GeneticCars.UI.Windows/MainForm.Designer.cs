@@ -32,7 +32,6 @@
       System.Windows.Forms.Label label1;
       this._canvas = new GeneticCars.UI.Windows.Canvas();
       this.CmdStart = new System.Windows.Forms.Button();
-      this.CmdReset = new System.Windows.Forms.Button();
       this.Tracks = new System.Windows.Forms.ComboBox();
       this.DebugLog = new System.Windows.Forms.TextBox();
       this._timer = new System.Windows.Forms.Timer(this.components);
@@ -40,6 +39,15 @@
       label1 = new System.Windows.Forms.Label();
       ((System.ComponentModel.ISupportInitialize)(this.MaxGenerations)).BeginInit();
       this.SuspendLayout();
+      // 
+      // label1
+      // 
+      label1.AutoSize = true;
+      label1.Location = new System.Drawing.Point(990, 24);
+      label1.Name = "label1";
+      label1.Size = new System.Drawing.Size(99, 15);
+      label1.TabIndex = 6;
+      label1.Text = "Max Generations:";
       // 
       // _canvas
       // 
@@ -62,23 +70,13 @@
       this.CmdStart.UseVisualStyleBackColor = true;
       this.CmdStart.Click += new System.EventHandler(this.CmdStart_Click);
       // 
-      // CmdReset
-      // 
-      this.CmdReset.Location = new System.Drawing.Point(825, 45);
-      this.CmdReset.Name = "CmdReset";
-      this.CmdReset.Size = new System.Drawing.Size(75, 23);
-      this.CmdReset.TabIndex = 2;
-      this.CmdReset.Text = "Reset";
-      this.CmdReset.UseVisualStyleBackColor = true;
-      this.CmdReset.Click += new System.EventHandler(this.CmdReset_Click);
-      // 
       // Tracks
       // 
       this.Tracks.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
       this.Tracks.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.Tracks.FormattingEnabled = true;
-      this.Tracks.Location = new System.Drawing.Point(825, 74);
+      this.Tracks.Location = new System.Drawing.Point(822, 51);
       this.Tracks.Name = "Tracks";
       this.Tracks.Size = new System.Drawing.Size(390, 23);
       this.Tracks.TabIndex = 3;
@@ -88,11 +86,11 @@
       // 
       this.DebugLog.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.DebugLog.Location = new System.Drawing.Point(825, 103);
+      this.DebugLog.Location = new System.Drawing.Point(825, 80);
       this.DebugLog.Multiline = true;
       this.DebugLog.Name = "DebugLog";
       this.DebugLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.DebugLog.Size = new System.Drawing.Size(390, 713);
+      this.DebugLog.Size = new System.Drawing.Size(390, 736);
       this.DebugLog.TabIndex = 4;
       // 
       // _timer
@@ -122,27 +120,16 @@
             0,
             0});
       // 
-      // label1
-      // 
-      label1.AutoSize = true;
-      label1.Location = new System.Drawing.Point(990, 24);
-      label1.Name = "label1";
-      label1.Size = new System.Drawing.Size(99, 15);
-      label1.TabIndex = 6;
-      label1.Text = "Max Generations:";
-      // 
       // MainForm
       // 
       this.AcceptButton = this.CmdStart;
       this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.CancelButton = this.CmdReset;
       this.ClientSize = new System.Drawing.Size(1227, 833);
       this.Controls.Add(label1);
       this.Controls.Add(this.MaxGenerations);
       this.Controls.Add(this.DebugLog);
       this.Controls.Add(this.Tracks);
-      this.Controls.Add(this.CmdReset);
       this.Controls.Add(this.CmdStart);
       this.Controls.Add(this._canvas);
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -160,7 +147,6 @@
 
     private Canvas _canvas;
     private Button CmdStart;
-    private Button CmdReset;
     private ComboBox Tracks;
     private TextBox DebugLog;
     private System.Windows.Forms.Timer _timer;
