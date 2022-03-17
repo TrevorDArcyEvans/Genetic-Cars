@@ -1,4 +1,6 @@
-﻿namespace GeneticCars.Pages;
+﻿using GeneticCars.UI.Windows.Drawables;
+
+namespace GeneticCars.Pages;
 
 using Blazor.Extensions;
 using Blazor.Extensions.Canvas.Canvas2D;
@@ -34,6 +36,14 @@ public partial class Index
   private TrackDrawer _track;
 
   private EvolutionManager _evMgr;
+  private int _maxGen { get; set; } = 20;
+  private readonly StatusMessage _statusMsg = new ();
+  private readonly StatusMessageDrawer _status;
+
+  public Index()
+  {
+    _status = new (_statusMsg);
+  }
 
   protected override async Task OnInitializedAsync()
   {
@@ -74,9 +84,8 @@ public partial class Index
 
     await _track.Draw(ctx);
 
-    await ctx.SetFontAsync("24px solid");
-    await ctx.SetFillStyleAsync("white");
-    await ctx.FillTextAsync($"{_evMgr.GenerationCount} / {EvolutionManager.MaxGenerations}", 700, 750);
+    _statusMsg.Text = $"{_evMgr.GenerationCount} / {_evMgr.MaxGenerations}";
+    await _status.Draw(ctx);
 
     _evMgr.Update();
 
@@ -122,6 +131,6 @@ public partial class Index
     }
 
     var cars = _cars.Select(car => car.Car).ToList().AsReadOnly();
-    _evMgr = new(_track.Track, cars);
+    _evMgr = new(_maxGen, _track.Track, cars);
   }
 }

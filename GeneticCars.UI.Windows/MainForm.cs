@@ -13,6 +13,7 @@ public partial class MainForm : Form
   private readonly List<CarDrawer> _cars = new();
   private TrackDrawer _track;
   private EvolutionManager _evMgr;
+  private readonly StatusMessage _statusMsg = new ();
 
   public MainForm()
   {
@@ -72,8 +73,11 @@ public partial class MainForm : Form
     var cars = _cars.Select(car => car.Car).ToList().AsReadOnly();
     _evMgr = new(_track.Track, cars);
 
+    var statusMsgDrawer = new StatusMessageDrawer(_statusMsg);
+
     var drawables = new List<IDrawable>();
     drawables.Add(_track);
+    drawables.Add(statusMsgDrawer);
     drawables.AddRange(_cars);
     _canvas.SetDrawables(drawables);
 
@@ -84,6 +88,7 @@ public partial class MainForm : Form
 
   private void Timer_Tick(object sender, EventArgs e)
   {
+    _statusMsg.Text = $"{_evMgr.GenerationCount} / {_evMgr.MaxGenerations}";
     _evMgr.Update();
     _canvas.Invalidate();
   }
