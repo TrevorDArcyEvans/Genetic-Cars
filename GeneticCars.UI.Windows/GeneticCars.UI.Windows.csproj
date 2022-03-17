@@ -12,6 +12,7 @@
     <None Include="..\GeneticCars.UI.Web\wwwroot\tracks\Philip-Island.png" Link="tracks\Philip-Island.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="..\GeneticCars.UI.Web\wwwroot\tracks\ellipse.png" Link="tracks\ellipse.png" />
     <Content Include="..\GeneticCars.UI.Web\wwwroot\tracks\Wanneroo.png" Link="tracks\Wanneroo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
