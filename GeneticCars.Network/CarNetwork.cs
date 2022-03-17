@@ -53,8 +53,7 @@ public sealed class CarNetwork
     GetNeuralInputAxis(out var linear, out var angular);
 
     // Moves the car
-    //Move(linear, angular);
-    Move(1, 0);
+    Move(linear, angular);
 
     TestCheckpointHit();
     TestOffTrack();
