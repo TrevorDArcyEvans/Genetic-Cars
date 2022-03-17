@@ -29,27 +29,26 @@ public sealed class NeuralNetwork
   private readonly ReadOnlyCollection<uint> _topology;
 
   // Contains the all the sections of the NeuralNetwork
-  private readonly NeuralSection[] _sections;
+  public NeuralSection[] Sections { get; private set; }
 
   // It is the Random instance used to mutate the NeuralNetwork
-  private readonly Random _randomizer;
+  private readonly Random _randomizer = new Random();
 
-  private class NeuralSection
+  public sealed class NeuralSection
   {
     // Contains all the weights of the section where [i][j] represents the weight 
     // from neuron i in the input layer and neuron j in the output layer
-    private readonly double[][] _weights;
+    public double[][] Weights { get; private set; }
 
     // Contains a reference to the Random instance of the NeuralNetwork
-    private readonly Random _randomizer;
+    private readonly Random _randomizer = new ();
 
     /// <summary>
     /// Initiate a NeuralSection from a topology and a seed.
     /// </summary>
     /// <param name="inputCount">The number of input neurons in the section.</param>
     /// <param name="outputCount">The number of output neurons in the section.</param>
-    /// <param name="randomizer">The Ransom instance of the NeuralNetwork.</param>
-    public NeuralSection(uint inputCount, uint outputCount, Random randomizer)
+    public NeuralSection(uint inputCount, uint outputCount)
     {
       // Validation Checks
       if (inputCount == 0)
@@ -62,20 +61,17 @@ public sealed class NeuralNetwork
         throw new ArgumentException("You cannot create a Neural Layer with no output neurons.", nameof(outputCount));
       }
 
-      // Set Randomizer
-      _randomizer = randomizer ?? throw new ArgumentException("The randomizer cannot be set to null.", nameof(randomizer));
-
       // Initialize the Weights array
       // +1 for the Bias Neuron
-      _weights = new double[inputCount + 1][];
+      Weights = new double[inputCount + 1][];
 
-      for (var i = 0; i < _weights.Length; i++)
+      for (var i = 0; i < Weights.Length; i++)
       {
-        _weights[i] = new double[outputCount];
+        Weights[i] = new double[outputCount];
       }
 
       // Set random weights
-      foreach (var weight in _weights)
+      foreach (var weight in Weights)
       {
         for (var j = 0; j < weight.Length; j++)
         {
@@ -94,19 +90,19 @@ public sealed class NeuralNetwork
       _randomizer = main._randomizer;
 
       // Initialize Weights
-      _weights = new double[main._weights.Length][];
+      Weights = new double[main.Weights.Length][];
 
-      for (var i = 0; i < _weights.Length; i++)
+      for (var i = 0; i < Weights.Length; i++)
       {
-        _weights[i] = new double[main._weights[0].Length];
+        Weights[i] = new double[main.Weights[0].Length];
       }
 
       // Set Weights
-      for (var i = 0; i < _weights.Length; i++)
+      for (var i = 0; i < Weights.Length; i++)
       {
-        for (var j = 0; j < _weights[i].Length; j++)
+        for (var j = 0; j < Weights[i].Length; j++)
         {
-          _weights[i][j] = main._weights[i][j];
+          Weights[i][j] = main.Weights[i][j];
         }
       }
     }
@@ -124,26 +120,26 @@ public sealed class NeuralNetwork
         throw new ArgumentException("The input array cannot be set to null.", nameof(input));
       }
 
-      if (input.Length != _weights.Length - 1)
+      if (input.Length != Weights.Length - 1)
       {
         throw new ArgumentException("The input array's length does not match the number of neurons in the input layer.", nameof(input));
       }
 
       // Initialize Output Array
-      var output = new double[_weights[0].Length];
+      var output = new double[Weights[0].Length];
 
       // Calculate Value
-      for (var i = 0; i < _weights.Length; i++)
+      for (var i = 0; i < Weights.Length; i++)
       {
-        for (var j = 0; j < _weights[i].Length; j++)
+        for (var j = 0; j < Weights[i].Length; j++)
         {
-          if (i == _weights.Length - 1) // If is Bias Neuron
+          if (i == Weights.Length - 1) // If is Bias Neuron
           {
-            output[j] += _weights[i][j]; // Then, the value of the neuron is equal to one
+            output[j] += Weights[i][j]; // Then, the value of the neuron is equal to one
           }
           else
           {
-            output[j] += _weights[i][j] * input[i];
+            output[j] += Weights[i][j] * input[i];
           }
         }
       }
@@ -165,7 +161,7 @@ public sealed class NeuralNetwork
     /// <param name="mutationAmount">The maximum amount a Mutated Weight would change.</param>
     public void Mutate(double mutationProbability, double mutationAmount)
     {
-      foreach (var weight in _weights)
+      foreach (var weight in Weights)
       {
         for (var j = 0; j < weight.Length; j++)
         {
@@ -184,14 +180,14 @@ public sealed class NeuralNetwork
     /// <param name="mutationAmount">The maximum amount a Mutated Weight would change.</param>
     public void MutateNodes(double mutationProbability, double mutationAmount)
     {
-      for (var j = 0; j < _weights[0].Length; j++) // For each output node
+      for (var j = 0; j < Weights[0].Length; j++) // For each output node
       {
         if (!(_randomizer.NextDouble() < mutationProbability))
         {
           continue;
         }
 
-        foreach (var weight in _weights)
+        foreach (var weight in Weights)
         {
           // Mutate the weight connecting both nodes
           weight[j] = _randomizer.NextDouble() * (mutationAmount * 2) - mutationAmount;
@@ -220,7 +216,7 @@ public sealed class NeuralNetwork
   /// </summary>
   /// <param name="topology">The Topology of the Neural Network.</param>
   /// <param name="seed">The Seed of the Neural Network. Set to 'null' to use a Timed Seed.</param>
-  public NeuralNetwork(uint[] topology, int? seed = 0)
+  public NeuralNetwork(uint[] topology)
   {
     // Validation Checks
     if (topology.Length < 2)
@@ -233,19 +229,16 @@ public sealed class NeuralNetwork
       throw new ArgumentException("A single layer of neurons must contain, at least, one neuron.", nameof(topology));
     }
 
-    // Initialize Randomizer
-    _randomizer = seed.HasValue ? new Random(seed.Value) : new Random();
-
     // Set Topology
     _topology = new List<uint>(topology).AsReadOnly();
 
     // Initialize Sections
-    _sections = new NeuralSection[_topology.Count - 1];
+    Sections = new NeuralSection[_topology.Count - 1];
 
     // Set the Sections
-    for (var i = 0; i < _sections.Length; i++)
+    for (var i = 0; i < Sections.Length; i++)
     {
-      _sections[i] = new NeuralSection(_topology[i], _topology[i + 1], _randomizer);
+      Sections[i] = new NeuralSection(_topology[i], _topology[i + 1]);
     }
   }
 
@@ -262,12 +255,12 @@ public sealed class NeuralNetwork
     _topology = main._topology;
 
     // Initialize Sections
-    _sections = new NeuralSection[_topology.Count - 1];
+    Sections = new NeuralSection[_topology.Count - 1];
 
     // Set the Sections
-    for (var i = 0; i < _sections.Length; i++)
+    for (var i = 0; i < Sections.Length; i++)
     {
-      _sections[i] = new NeuralSection(main._sections[i]);
+      Sections[i] = new NeuralSection(main.Sections[i]);
     }
   }
 
@@ -292,7 +285,7 @@ public sealed class NeuralNetwork
     var output = input;
 
     // Feed values through all sections
-    foreach (var ns in _sections)
+    foreach (var ns in Sections)
     {
       output = ns.FeedForward(output);
     }
@@ -308,7 +301,7 @@ public sealed class NeuralNetwork
   public void Mutate(double mutationProbability = 0.3, double mutationAmount = 2.0)
   {
     // Mutate each section
-    foreach (var ns in _sections)
+    foreach (var ns in Sections)
     {
       ns.Mutate(mutationProbability, mutationAmount);
     }
@@ -322,7 +315,7 @@ public sealed class NeuralNetwork
   public void MutateNodes(double mutationProbability = 0.3, double mutationAmount = 2.0)
   {
     // Mutate each section
-    foreach (var ns in _sections)
+    foreach (var ns in Sections)
     {
       ns.MutateNodes(mutationProbability, mutationAmount);
     }

@@ -6,6 +6,7 @@ using CommandLine;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using System.Reflection;
+using Newtonsoft.Json;
 
 internal static class Program
 {
@@ -52,6 +53,13 @@ internal static class Program
       currGenCount = evMgr.GenerationCount;
       Console.WriteLine($"{evMgr.GenerationCount} / {evMgr.MaxGenerations} [{evMgr.BestFitness}]");
     }
+
+    var bestNN = JsonConvert.SerializeObject(evMgr.BestNeuralNetwork);
+    Console.WriteLine("Best network:");
+    Console.WriteLine(bestNN);
+
+    // TODO   support deserialisation
+    // var deserBestNN = JsonConvert.DeserializeObject<NeuralNetwork>(bestNN);
   }
 
   private static string GetTracksDir()

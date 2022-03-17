@@ -13,7 +13,7 @@ using System.Numerics;
 
 public sealed class CarNetwork
 {
-  public static NeuralNetwork NextNetwork = new(new uint[] { 6, 4, 3, 2 }, null);
+  public static NeuralNetwork NextNetwork = new(new uint[] { 6, 4, 3, 2 });
 
   // The fitness/score of the current car. Represents the number of checkpoints that his car hit.
   public int Fitness { get; private set; }
@@ -40,7 +40,7 @@ public sealed class CarNetwork
     Network = NextNetwork;
 
     // Make sure the Next Network is reassigned to avoid having another car use the same network
-    NextNetwork = new NeuralNetwork(NextNetwork.Topology, null);
+    NextNetwork = new NeuralNetwork(NextNetwork.Topology);
   }
 
   public void Update()

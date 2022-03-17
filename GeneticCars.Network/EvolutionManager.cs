@@ -27,7 +27,7 @@ public sealed class EvolutionManager
   private readonly ReadOnlyCollection<Car> _cars;
 
   // The best NeuralNetwork currently available
-  private NeuralNetwork _bestNeuralNetwork;
+  public NeuralNetwork BestNeuralNetwork { get; private set; }
 
   // The Fitness of the best NeuralNetwork ever created
   public int BestFitness { get; private set; } = -1;
@@ -39,7 +39,7 @@ public sealed class EvolutionManager
     (MaxGenerations, _track, _cars) = (maxGen, track, cars);
 
     // Set the BestNeuralNetwork to a random new network
-    _bestNeuralNetwork = new NeuralNetwork(CarNetwork.NextNetwork);
+    BestNeuralNetwork = new NeuralNetwork(CarNetwork.NextNetwork);
 
     StartGeneration();
   }
@@ -77,12 +77,12 @@ public sealed class EvolutionManager
     {
       if (i == 0)
       {
-        CarNetwork.NextNetwork = _bestNeuralNetwork; // Make sure one car uses the best network
+        CarNetwork.NextNetwork = BestNeuralNetwork; // Make sure one car uses the best network
       }
       else
       {
         // Clone the best neural network and set it to be for the next car
-        CarNetwork.NextNetwork = new NeuralNetwork(_bestNeuralNetwork);
+        CarNetwork.NextNetwork = new NeuralNetwork(BestNeuralNetwork);
 
         if (UseNodeMutation) // Should we use Node Mutation
         {
@@ -114,7 +114,7 @@ public sealed class EvolutionManager
       return;
     }
 
-    _bestNeuralNetwork = deadCar.Network; // Make sure it becomes the best car
+    BestNeuralNetwork = deadCar.Network; // Make sure it becomes the best car
     BestFitness = deadCar.Fitness; // And also set the best fitness
   }
 }
