@@ -153,9 +153,9 @@ public sealed class CarNetwork
   {
     // Move underlying car
     _car.Heading += angular;
-    var deltaX = linear * Math.Sin(_car.Heading.ToRadians()) * 4;
-    var deltaY = -linear * Math.Cos(_car.Heading.ToRadians()) * 4;
-    _car.Move((int)(deltaX), (int)(deltaY));
+    var deltaX = linear * Math.Sin(_car.Heading.ToRadians()) * 2d;
+    var deltaY = -linear * Math.Cos(_car.Heading.ToRadians()) * 2d;
+    _car.Move((int)deltaX, (int)deltaY);
   }
 
   // This function is when the car hits any checkpoints
