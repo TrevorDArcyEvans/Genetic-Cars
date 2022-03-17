@@ -9,7 +9,8 @@ using Image = SixLabors.ImageSharp.Image;
 
 public partial class MainForm : Form
 {
-  private int _count;
+  private const int CarsPerGeneration = 10;
+
   private readonly List<CarDrawer> _cars = new();
   private TrackDrawer _track;
   private EvolutionManager _evMgr;
@@ -37,7 +38,6 @@ public partial class MainForm : Form
   private void Reset()
   {
     _timer.Enabled = false;
-    _count = 0;
 
     _evMgr?.Reset();
   }
@@ -63,7 +63,7 @@ public partial class MainForm : Form
     DebugLog.Text += $"ChkPts:  [{track.Checkpoints.Count()}]" + Environment.NewLine;
 
     _cars.Clear();
-    foreach (var _ in Enumerable.Range(0, 10))
+    foreach (var _ in Enumerable.Range(0, CarsPerGeneration))
     {
       var car = new Car(_track.Track.Start, _track.Track.Direction);
       var carDraw = new CarDrawer(car);

@@ -14,6 +14,8 @@ using SixLabors.ImageSharp.PixelFormats;
 
 public partial class Index
 {
+  private const int CarsPerGeneration = 10;
+
   [Inject]
   private IJSRuntime JsRuntime { get; set; }
 
@@ -125,7 +127,7 @@ public partial class Index
     _image64 = "data:image/png;base64," + Convert.ToBase64String(outStream.ToArray());
 
     _cars.Clear();
-    foreach (var _ in Enumerable.Range(0, 10))
+    foreach (var _ in Enumerable.Range(0, CarsPerGeneration))
     {
       var car = new Car(_track.Track.Start, _track.Track.Direction);
       var carDraw = new CarDrawer(car);
