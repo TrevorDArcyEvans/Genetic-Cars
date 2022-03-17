@@ -2,18 +2,25 @@
 
 using Models;
 using Network;
+using CommandLine;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using System.Reflection;
 
 internal static class Program
 {
-  [STAThread]
-  public static void Main(string[] args)
+  public static async Task Main(string[] args)
   {
-    var trackName = args[0];
-    var maxGenerations = int.Parse(args[1]);
-    var carsPerGeneration = int.Parse(args[2]);
+    var result = await Parser.Default.ParseArguments<Options>(args)
+      .WithParsedAsync(Run);
+    await result.WithNotParsedAsync(HandleParseError);
+  }
+
+  private static async Task Run(Options opt)
+  {
+    var trackName = opt.TrackName;
+    var maxGenerations = opt.MaxGenerations;
+    var carsPerGeneration = opt.CarsPerGeneration;
 
     var trackPath = Path.Combine(GetTracksDir(), trackName);
     var trackImg = Image.Load<Rgba32>(trackPath);
@@ -53,6 +60,25 @@ internal static class Program
     var currAssyDir = Path.GetDirectoryName(currAssyPath);
     var tracksDir = Path.Combine(currAssyDir, "tracks");
     return tracksDir;
+  }
+
+  private static Task HandleParseError(IEnumerable<Error> errs)
+  {
+    if (errs.IsVersion())
+    {
+      Console.WriteLine("Version Request");
+      return Task.CompletedTask;
+    }
+
+    if (errs.IsHelp())
+    {
+      Console.WriteLine("Help Request");
+      return Task.CompletedTask;
+      ;
+    }
+
+    Console.WriteLine("Parser Fail");
+    return Task.CompletedTask;
   }
 }
 
