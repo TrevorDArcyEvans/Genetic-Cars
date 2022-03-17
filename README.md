@@ -107,15 +107,15 @@ The system is composed of a number of components:
 
 Currently this is an 800x800 pixel PNG image with the following characteristics:
 * track
-  * white (RGB(255, 255, 255)
+  * white RGB(255, 255, 255)
   * defines area where cars are allowed to go
   * must be contiguous loop
   * should be 40-50 pixels wide
 * off track
-  * black (RGB(0, 0, 0)
+  * black RGB(0, 0, 0)
   * defines areas where cars will be destroyed
 * start point
-  * green (RGB(0, 255, 0)
+  * green RGB(0, 255, 0)
   * 5x5 square on a section of track
   * all cars start from this point
   * there can only be one start point in a track
@@ -125,7 +125,7 @@ Currently this is an 800x800 pixel PNG image with the following characteristics:
   * should really keep RBG values <= 120 so as not to confuse start point and checkpoint detection
   * specifies initial heading of car from start point
 * checkpoint
-  * red (RGB(255, 0, 0)
+  * red RGB(255, 0, 0)
   * 5x5 square on a section of track
   * multiple checkpoints around the track
   * recommended to have several checkpoints near start point in track direction to bias cars to follow track direction
