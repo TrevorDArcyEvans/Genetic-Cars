@@ -1,7 +1,11 @@
 # Genetic Cars
 Training a car to drive around a track using AI.
 
-![](screenshot.png)
+![](screenshot-windows.png)
+<p/>
+
+![](screenshot-wasm.png)
+<p/>
 
 Inspired by and based on:
 * [ReInventing Neural Networks](https://www.codeproject.com/Articles/1220276/ReInventing-Neural-Networks)
