@@ -14,8 +14,6 @@ using SixLabors.ImageSharp.PixelFormats;
 
 public partial class Index
 {
-  private const int CarsPerGeneration = 10;
-
   [Inject]
   private IJSRuntime JsRuntime { get; set; }
 
@@ -38,6 +36,7 @@ public partial class Index
 
   private EvolutionManager _evMgr;
   private int _maxGen { get; set; } = 20;
+  private int _carsGen { get; set; } = 10;
   private readonly StatusMessage _statusMsg = new();
   private readonly StatusMessageDrawer _status;
 
@@ -100,6 +99,14 @@ public partial class Index
   {
     if (!_run)
     {
+      _cars.Clear();
+      foreach (var _ in Enumerable.Range(0, _carsGen))
+      {
+        var car = new Car(_track.Track.Start, _track.Track.Direction);
+        var carDraw = new CarDrawer(car);
+        _cars.Add(carDraw);
+      }
+
       var cars = _cars.Select(car => car.Car).ToList().AsReadOnly();
       _evMgr = new(_maxGen, _track.Track, cars);
     }
@@ -125,13 +132,5 @@ public partial class Index
     using var outStream = new MemoryStream();
     trackImg.SaveAsPng(outStream);
     _image64 = "data:image/png;base64," + Convert.ToBase64String(outStream.ToArray());
-
-    _cars.Clear();
-    foreach (var _ in Enumerable.Range(0, CarsPerGeneration))
-    {
-      var car = new Car(_track.Track.Start, _track.Track.Direction);
-      var carDraw = new CarDrawer(car);
-      _cars.Add(carDraw);
-    }
   }
 }
