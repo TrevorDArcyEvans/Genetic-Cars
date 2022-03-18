@@ -132,3 +132,15 @@ Currently this is an 800x800 pixel PNG image with the following characteristics:
 
 </details>
 
+## Notes
+
+<details>
+
+* WASM debugging is unreliable, even with _Visual Studio_
+* neural network failed to negotiate even the most favourably configured track (Philip Island),
+  even after many generations
+* it is unclear if changing number of neurons in hidden layer would improve performance
+* graphical representation **really** helped visualisation even though it is slow
+* WASM performance is surprisingly good
+
+</details>
