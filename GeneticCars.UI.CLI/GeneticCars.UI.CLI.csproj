@@ -8,13 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\GeneticCars.UI.Web\wwwroot\tracks\ellipse.png" Link="tracks\ellipse.png">
+    <None Include="..\tracks\ellipse.png" Link="tracks\ellipse.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Content Include="..\GeneticCars.UI.Web\wwwroot\tracks\Philip-Island.png" Link="tracks\Philip-Island.png">
+    <None Include="..\tracks\Philip-Island.png" Link="tracks\Philip-Island.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <None Include="..\GeneticCars.UI.Web\wwwroot\tracks\Wanneroo.png" Link="tracks\Wanneroo.png">
+    </None>
+    <None Include="..\tracks\Wanneroo.png" Link="tracks\Wanneroo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
