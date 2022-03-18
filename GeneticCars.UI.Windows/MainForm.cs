@@ -9,8 +9,6 @@ using Image = SixLabors.ImageSharp.Image;
 
 public partial class MainForm : Form
 {
-  private const int CarsPerGeneration = 10;
-
   private readonly List<CarDrawer> _cars = new();
   private TrackDrawer _track;
   private EvolutionManager _evMgr;
@@ -29,6 +27,20 @@ public partial class MainForm : Form
   {
     if (!_timer.Enabled)
     {
+      _cars.Clear();
+      foreach (var _ in Enumerable.Range(0, (int)CarsPerGeneration.Value))
+      {
+        var car = new Car(_track.Track.Start, _track.Track.Direction);
+        var carDraw = new CarDrawer(car);
+        _cars.Add(carDraw);
+      }
+
+      var drawables = new List<IDrawable>();
+      drawables.Add(_track);
+      drawables.Add(new StatusMessageDrawer(_statusMsg));
+      drawables.AddRange(_cars);
+      _canvas.SetDrawables(drawables);
+
       var cars = _cars.Select(car => car.Car).ToList().AsReadOnly();
       _evMgr = new((int)MaxGenerations.Value, _track.Track, cars);
     }
@@ -62,21 +74,7 @@ public partial class MainForm : Form
     DebugLog.Text += $"Start:   [{track.Start.X}, {track.Start.Y}]" + Environment.NewLine;
     DebugLog.Text += $"ChkPts:  [{track.Checkpoints.Count()}]" + Environment.NewLine;
 
-    _cars.Clear();
-    foreach (var _ in Enumerable.Range(0, CarsPerGeneration))
-    {
-      var car = new Car(_track.Track.Start, _track.Track.Direction);
-      var carDraw = new CarDrawer(car);
-      _cars.Add(carDraw);
-    }
-
-    var statusMsgDrawer = new StatusMessageDrawer(_statusMsg);
-
-    var drawables = new List<IDrawable>();
-    drawables.Add(_track);
-    drawables.Add(statusMsgDrawer);
-    drawables.AddRange(_cars);
-    _canvas.SetDrawables(drawables);
+    _canvas.SetDrawables(new(new[] { _track }));
 
     _canvas.Invalidate();
 

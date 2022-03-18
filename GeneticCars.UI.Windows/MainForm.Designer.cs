@@ -30,24 +30,37 @@
     {
       this.components = new System.ComponentModel.Container();
       System.Windows.Forms.Label label1;
+      System.Windows.Forms.Label label2;
       this._canvas = new GeneticCars.UI.Windows.Canvas();
       this.CmdStart = new System.Windows.Forms.Button();
       this.Tracks = new System.Windows.Forms.ComboBox();
       this.DebugLog = new System.Windows.Forms.TextBox();
       this._timer = new System.Windows.Forms.Timer(this.components);
       this.MaxGenerations = new System.Windows.Forms.NumericUpDown();
+      this.CarsPerGeneration = new System.Windows.Forms.NumericUpDown();
       label1 = new System.Windows.Forms.Label();
+      label2 = new System.Windows.Forms.Label();
       ((System.ComponentModel.ISupportInitialize)(this.MaxGenerations)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.CarsPerGeneration)).BeginInit();
       this.SuspendLayout();
       // 
       // label1
       // 
       label1.AutoSize = true;
-      label1.Location = new System.Drawing.Point(990, 24);
+      label1.Location = new System.Drawing.Point(825, 16);
       label1.Name = "label1";
       label1.Size = new System.Drawing.Size(99, 15);
       label1.TabIndex = 6;
       label1.Text = "Max Generations:";
+      // 
+      // label2
+      // 
+      label2.AutoSize = true;
+      label2.Location = new System.Drawing.Point(825, 51);
+      label2.Name = "label2";
+      label2.Size = new System.Drawing.Size(114, 15);
+      label2.TabIndex = 8;
+      label2.Text = "Cars Per Generation:";
       // 
       // _canvas
       // 
@@ -62,7 +75,7 @@
       // 
       // CmdStart
       // 
-      this.CmdStart.Location = new System.Drawing.Point(825, 16);
+      this.CmdStart.Location = new System.Drawing.Point(1137, 14);
       this.CmdStart.Name = "CmdStart";
       this.CmdStart.Size = new System.Drawing.Size(75, 23);
       this.CmdStart.TabIndex = 1;
@@ -76,9 +89,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
       this.Tracks.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.Tracks.FormattingEnabled = true;
-      this.Tracks.Location = new System.Drawing.Point(822, 51);
+      this.Tracks.Location = new System.Drawing.Point(825, 72);
       this.Tracks.Name = "Tracks";
-      this.Tracks.Size = new System.Drawing.Size(390, 23);
+      this.Tracks.Size = new System.Drawing.Size(387, 23);
       this.Tracks.TabIndex = 3;
       this.Tracks.SelectedIndexChanged += new System.EventHandler(this.Tracks_SelectedIndexChanged);
       // 
@@ -86,11 +99,11 @@
       // 
       this.DebugLog.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.DebugLog.Location = new System.Drawing.Point(825, 80);
+      this.DebugLog.Location = new System.Drawing.Point(825, 101);
       this.DebugLog.Multiline = true;
       this.DebugLog.Name = "DebugLog";
       this.DebugLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-      this.DebugLog.Size = new System.Drawing.Size(390, 736);
+      this.DebugLog.Size = new System.Drawing.Size(390, 715);
       this.DebugLog.TabIndex = 4;
       // 
       // _timer
@@ -100,9 +113,9 @@
       // 
       // MaxGenerations
       // 
-      this.MaxGenerations.Location = new System.Drawing.Point(1095, 22);
+      this.MaxGenerations.Location = new System.Drawing.Point(945, 14);
       this.MaxGenerations.Maximum = new decimal(new int[] {
-            500,
+            250000,
             0,
             0,
             0});
@@ -120,12 +133,36 @@
             0,
             0});
       // 
+      // CarsPerGeneration
+      // 
+      this.CarsPerGeneration.Location = new System.Drawing.Point(945, 43);
+      this.CarsPerGeneration.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+      this.CarsPerGeneration.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+      this.CarsPerGeneration.Name = "CarsPerGeneration";
+      this.CarsPerGeneration.Size = new System.Drawing.Size(120, 23);
+      this.CarsPerGeneration.TabIndex = 7;
+      this.CarsPerGeneration.Value = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+      // 
       // MainForm
       // 
       this.AcceptButton = this.CmdStart;
       this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(1227, 833);
+      this.Controls.Add(label2);
+      this.Controls.Add(this.CarsPerGeneration);
       this.Controls.Add(label1);
       this.Controls.Add(this.MaxGenerations);
       this.Controls.Add(this.DebugLog);
@@ -138,6 +175,7 @@
       this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
       this.Text = "Genetic Cars";
       ((System.ComponentModel.ISupportInitialize)(this.MaxGenerations)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.CarsPerGeneration)).EndInit();
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -151,5 +189,6 @@
     private TextBox DebugLog;
     private System.Windows.Forms.Timer _timer;
     private NumericUpDown MaxGenerations;
+    private NumericUpDown CarsPerGeneration;
   }
 }
