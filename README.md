@@ -148,3 +148,6 @@ Currently this is an 800x800 pixel PNG image with the following characteristics:
 * WASM performance is surprisingly good
 
 </details>
+
+## Further work
+* support deserialisation of `NeuralNetwork`
