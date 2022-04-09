@@ -26,7 +26,7 @@ dotnet build
 
 ### Web UI
 ```bash
-cd cd GeneticCars.UI.Web/
+cd GeneticCars.UI.Web/
 
 # copy tracks so web UI can find them when
 # we run from project directory
