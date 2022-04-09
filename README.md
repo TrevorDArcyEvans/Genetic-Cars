@@ -12,6 +12,32 @@ Inspired by and based on:
 * [ReInventing Neural Networks - Part 2](https://www.codeproject.com/Articles/1220644/ReInventing-Neural-Networks-Part)
 * [ReInventing Neural Networks - Part 3](https://www.codeproject.com/Articles/1231020/ReInventing-Neural-Networks-Part-2)
 
+## Prerequisites
+* .NET Core 6
+* Windows
+
+## Getting started
+```bash
+git clone https://github.com/TrevorDArcyEvans/Genetic-Cars.git
+cd Genetic-Cars
+dotnet restore
+dotnet build
+```
+
+### Web UI
+```bash
+cd cd GeneticCars.UI.Web/
+
+# copy tracks so web UI can find them when
+# we run from project directory
+cp  ../tracks/* wwwroot/tracks/
+
+dotnet restore
+dotnet build
+dotnet run
+```
+open [Genetic-Cars](http://localhost:5161)
+
 ## Background
 
 <details>
